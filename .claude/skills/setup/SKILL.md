@@ -89,8 +89,43 @@ Generic flows ("check the page loads") are useless. Specific flows ("status 201 
 Aim for at least 3 flows. A project with fewer than 3 verification flows is under-instrumented.
 
 ### Update: `CLAUDE.md`
-If you discovered project-specific rules that Claude should always follow (e.g., a specific import pattern, a required wrapper function, a naming convention enforced in the codebase), add them to the Architectural Rules section.
-Keep CLAUDE.md under 120 lines total.
+
+Do a deliberate scan to extract project-specific rules. Work through each category below and add only rules that pass the filter.
+
+**Category 1 — Module boundaries**
+Read 5-10 import statements across different layers (controllers, services, repositories, utils).
+Ask: are there import patterns that are always followed? Always violated?
+Good rule: "Services must never import from the controllers/ directory"
+Bad rule: "Follow clean architecture" (too vague)
+
+**Category 2 — Wrapper conventions**
+Grep for custom wrappers: HTTP clients, loggers, error classes, DB connectors.
+Ask: is there a project-specific class or function that should always be used instead of the raw library?
+Good rule: "Never use axios directly — import httpClient from src/lib/http.ts"
+Bad rule: "Use the HTTP client" (no path, no enforcement)
+
+**Category 3 — Naming conventions that differ from language defaults**
+Scan 10-20 filenames and function names. Look for surprises.
+Good rule: "Files are kebab-case, but DB column names are snake_case — never mix them"
+Bad rule: "Use camelCase for variables" (JavaScript default — Claude already knows this)
+
+**Category 4 — Data shape invariants**
+Look for comments, types, or tests that assert facts about data.
+Good rule: "Prices are always stored in cents (integer) — never dollars or floats"
+Bad rule: "Handle money carefully" (not actionable)
+
+**Category 5 — Error handling patterns**
+Find how errors are thrown, caught, and surfaced.
+Good rule: "All thrown errors must extend AppError from src/errors/base.ts"
+Bad rule: "Handle errors properly" (not actionable)
+
+**The filter — before adding any rule, ask:**
+1. Would Claude get this wrong without being told? (If no → skip)
+2. Is it already enforced by a linter, formatter, or TypeScript? (If yes → skip)
+3. Is it specific enough that Claude knows exactly what to do? (If no → rewrite it)
+4. Does adding it keep CLAUDE.md under 120 lines? (If no → pick the most important ones)
+
+Add only rules that pass all four. Aim for 2-5 new rules. Quality beats quantity.
 
 ## Step 7 — Report what you did
 

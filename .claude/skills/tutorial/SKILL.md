@@ -107,19 +107,24 @@ I just read yours. Here's what's in it:
      to keep the important rules easy to find.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 TRY IT: Tell me one rule specific to YOUR project.
+🎯 TRY IT: Let me scan your codebase for rules.
 
-   Something Claude would get wrong without being told.
-   Examples:
-   - "Always use the httpClient wrapper, never axios directly"
-   - "Database access must go through the repository layer"
-   - "All prices are stored in cents, never dollars"
+   I'll look for 5 types of project-specific patterns:
+   1. Module boundaries — what can import from what?
+   2. Wrapper conventions — custom HTTP client, logger, error class?
+   3. Naming surprises — anything that differs from language defaults?
+   4. Data shape facts — prices in cents? IDs as strings?
+   5. Error handling — custom error class? specific pattern?
 
-   I'll add it to CLAUDE.md for you.
+   I'll scan your code and propose rules. You approve each one
+   before it goes into CLAUDE.md.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Wait for the user's rule. Add it to CLAUDE.md. Show them the line that was added. Then wait for 'next'.
+Scan the codebase using the 5-category approach from the setup skill.
+Propose 2-4 rules. For each one, explain WHY it's worth adding — what Claude would get wrong without it.
+Wait for the user to approve or reject each. Add approved rules to CLAUDE.md.
+Show the lines added. Then wait for 'next'.
 
 ---
 
