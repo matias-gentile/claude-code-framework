@@ -1,0 +1,83 @@
+name: Claude PR Review
+
+# Triggers:
+# 1. Tag mode (safe default): comment "@claude" on any PR to request a review
+# 2. Auto mode (opt-in): uncomment the pull_request trigger below to review every PR automatically
+#
+# To enable auto mode, uncomment these lines and remove the issue_comment trigger:
+# on:
+#   pull_request:
+#     types: [opened, synchronize]
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  claude-review:
+    # Tag mode: only run when someone comments "@claude" on a PR
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '@claude')
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history so Claude can read git log
+
+      - name: Claude PR Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+          # Use Sonnet for reviews (cost-efficient, ~$0.04/review)
+          # Switch to claude-opus-4-7 for complex architectural PRs
+          model: claude-sonnet-4-20250514
+
+          # Token budget — 20k is right for PR reviews per SOTA benchmarks
+          max_tokens: 20000
+
+          # Scope what Claude can read and do
+          allowed_tools: "Read,Glob,Grep,Bash(git diff*),Bash(git log*),Bash(git show*)"
+
+          # Pass the project's architectural rules to the review
+          # Claude reads CLAUDE.md automatically from the repo root
+          custom_instructions: |
+            You are reviewing a pull request. Follow these steps:
+            1. Run: git diff origin/main...HEAD to see all changes
+            2. Read CLAUDE.md for architectural rules
+            3. Read any relevant ADRs in adr/ that apply to changed areas
+            4. Apply the code-reviewer agent checklist from .claude/agents/reviewer.md
+            5. Post a structured review with verdict: ✅ Approved | ⚠️ Approved with notes | ❌ Blocked
+            6. If you find lessons that should go in CLAUDE.md or a skill, note them explicitly
+
+            Be concise. One comment per file, grouped by severity. No praise for passing checks.
+
+# ── Setup instructions ────────────────────────────────────────────────────────
+#
+# 1. Add your Anthropic API key to GitHub Secrets:
+#    Repo Settings → Secrets and variables → Actions → New secret
+#    Name: ANTHROPIC_API_KEY
+#    Value: sk-ant-...
+#
+# 2. To trigger a review: comment "@claude" on any open PR
+#
+# 3. To enable automatic review on every PR: uncomment the pull_request trigger above
+#    and set max_tokens: 20000 with a token budget alert in your billing settings
+#
+# 4. Cost estimate:
+#    - ~$0.04 per review on Sonnet
+#    - ~$0.20 per review on Opus
+#    - 20 PRs/day on Sonnet ≈ $24/month
+#
+# Docs: https://docs.anthropic.com/en/docs/claude-code/github-actions

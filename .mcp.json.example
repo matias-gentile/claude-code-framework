@@ -1,0 +1,47 @@
+{
+  "_readme": [
+    "SETUP: copy this file to .mcp.json and fill in your real tokens.",
+    "  cp .mcp.json.example .mcp.json",
+    ".mcp.json is in .gitignore — your tokens will never be committed.",
+    "Or ask Claude Code: 'Help me configure my MCP integrations'",
+    "Keep active servers to ≤6. Each server adds ~500-1000 tokens per tool.",
+    "Docs: https://docs.anthropic.com/en/docs/claude-code/mcp"
+  ],
+  "mcpServers": {
+    "github": {
+      "_description": "GitHub — issue tracking, PR reviews, repo search. Highest-ROI MCP for most teams.",
+      "_status": "UNCONFIGURED — ask Claude to configure",
+      "type": "url",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer <YOUR_GITHUB_TOKEN>"
+      }
+    },
+    "context7": {
+      "_description": "Context7 — live, version-aware library documentation. Eliminates API hallucinations.",
+      "_status": "UNCONFIGURED — ask Claude to configure",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "database": {
+      "_description": "Read-only database access for query-driven debugging. Replace with your DB type.",
+      "_status": "UNCONFIGURED — ask Claude to configure",
+      "command": "npx",
+      "args": ["-y", "postgres-mcp-server", "--access-mode", "read-only"],
+      "env": {
+        "DB_CONNECTION_STRING": "<YOUR_DB_CONNECTION_STRING>"
+      },
+      "timeout": 30000
+    },
+    "custom-api": {
+      "_description": "Optional: connect to an internal API, Jira, Linear, Notion, Sentry, etc.",
+      "_status": "UNCONFIGURED — remove this block or ask Claude to configure",
+      "type": "url",
+      "url": "<YOUR_MCP_SERVER_URL>",
+      "headers": {
+        "Authorization": "Bearer <YOUR_API_TOKEN>"
+      },
+      "timeout": 30000
+    }
+  }
+}

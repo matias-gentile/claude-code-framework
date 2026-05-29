@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent-First Engineering Framework — Guide</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f6f3;
+  --bg-tertiary: #efedea;
+  --text-primary: #1a1a19;
+  --text-secondary: #6b6a65;
+  --text-tertiary: #9c9a92;
+  --border: rgba(0,0,0,0.1);
+  --border-hover: rgba(0,0,0,0.2);
+  --border-active: rgba(0,0,0,0.3);
+  --accent-info: #2563eb;
+  --accent-info-bg: #eff6ff;
+  --accent-info-border: #bfdbfe;
+  --accent-success: #16a34a;
+  --accent-success-bg: #f0fdf4;
+  --accent-success-border: #bbf7d0;
+  --accent-warning: #d97706;
+  --accent-warning-bg: #fffbeb;
+  --accent-warning-border: #fde68a;
+  --accent-danger: #dc2626;
+  --accent-danger-bg: #fef2f2;
+  --accent-danger-border: #fecaca;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+@media (prefers-color-scheme:dark) {
+  :root {
+    --bg-primary: #1c1c1a;
+    --bg-secondary: #262624;
+    --bg-tertiary: #2e2e2b;
+    --text-primary: #e8e6df;
+    --text-secondary: #9c9a92;
+    --text-tertiary: #6b6a65;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --border-active: rgba(255,255,255,0.25);
+    --accent-info: #60a5fa;
+    --accent-info-bg: #172554;
+    --accent-info-border: #1e3a5f;
+    --accent-success: #4ade80;
+    --accent-success-bg: #14532d;
+    --accent-success-border: #1a4731;
+    --accent-warning: #fbbf24;
+    --accent-warning-bg: #451a03;
+    --accent-warning-border: #5c3a0e;
+    --accent-danger: #f87171;
+    --accent-danger-bg: #450a0a;
+    --accent-danger-border: #5c1818;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg-tertiary);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased}
+.container{max-width:740px;margin:0 auto;padding:2rem 1.5rem}
+.hero{text-align:center;padding:3rem 0 2rem}
+.hero h1{font-size:26px;font-weight:500;letter-spacing:-0.5px;margin-bottom:8px}
+.hero p{color:var(--text-secondary);font-size:14px}
+.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:var(--accent-info-bg);color:var(--accent-info);border:0.5px solid var(--accent-info-border);margin-bottom:16px}
+.tabs{display:flex;gap:6px;margin-bottom:2rem;flex-wrap:wrap;justify-content:center}
+.tab{padding:7px 16px;border-radius:var(--radius);border:0.5px solid var(--border);font-size:13px;font-family:inherit;cursor:pointer;background:var(--bg-secondary);color:var(--text-secondary);transition:all .15s}
+.tab:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.tab.active{background:var(--bg-primary);border-color:var(--border-active);color:var(--text-primary);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.card{background:var(--bg-primary);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:2rem;margin-bottom:1.5rem}
+.panel{display:none}.panel.active{display:block}
+.section-title{font-size:15px;font-weight:500;margin-bottom:12px}
+.section-desc{font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px}
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.comparison{grid-template-columns:1fr}}
+.compare-card{padding:16px;border-radius:var(--radius-lg);border:0.5px solid var(--border)}
+.compare-card.accent{border-color:var(--accent-info-border)}
+.compare-label{font-size:12px;color:var(--text-secondary);margin-bottom:8px}
+.compare-label.accent{color:var(--accent-info)}
+.compare-body{font-size:13px;line-height:1.6}
+.callout{padding:16px;border-radius:var(--radius-lg);background:var(--bg-secondary);border:0.5px solid var(--border);margin-top:20px}
+.callout-title{font-size:13px;font-weight:500;margin-bottom:6px}
+.callout-body{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.layer{border-radius:var(--radius-lg);border:0.5px solid var(--border);margin-bottom:8px;cursor:pointer;transition:border-color .15s;overflow:hidden}
+.layer:hover{border-color:var(--border-hover)}
+.layer.open{border-color:var(--border-active)}
+.layer-head{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.layer-icon{width:34px;height:34px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.layer-title{font-size:14px;font-weight:500;flex:1}
+.layer-badge{font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--border);color:var(--text-secondary)}
+.chevron{color:var(--text-tertiary);transition:transform .2s;font-size:16px}
+.layer.open .chevron{transform:rotate(180deg)}
+.layer-body{padding:0 16px 16px;font-size:13px;color:var(--text-secondary);line-height:1.7;display:none}
+.layer.open .layer-body{display:block}
+.layer-body ul{margin:10px 0;padding-left:20px}
+.layer-body li{margin:5px 0}
+.layer-body strong{font-weight:500;color:var(--text-primary)}
+code{font-family:'DM Mono',monospace;font-size:12px;background:var(--bg-secondary);padding:2px 6px;border-radius:4px;color:var(--text-primary)}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+.agent-card{border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:18px}
+.agent-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.agent-icon{width:30px;height:30px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.agent-name{font-size:14px;font-weight:500}
+.agent-role{font-size:12px;color:var(--text-secondary);margin-bottom:10px}
+.agent-desc{font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px}
+.agent-rule{font-size:12px;padding:10px 12px;border-radius:var(--radius);line-height:1.5;border:0.5px solid}
+.agent-cmd{margin-top:10px;font-size:12px;color:var(--text-secondary)}
+.skill-list{display:flex;flex-direction:column;gap:8px}
+.skill-row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:var(--radius);border:0.5px solid var(--border)}
+.skill-icon{width:30px;height:30px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.skill-name{font-size:13px;font-weight:500}
+.skill-desc{font-size:12px;color:var(--text-secondary);margin-top:3px;line-height:1.5}
+.flow-steps{display:flex;flex-direction:column}
+.fstep{display:flex;gap:16px;position:relative}
+.fstep-track{display:flex;flex-direction:column;align-items:center}
+.fstep-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.fstep-line{flex:1;width:0.5px;background:var(--border);margin:4px 0}
+.fstep:last-child .fstep-line{display:none}
+.fstep-body{padding-bottom:24px}
+.fstep-title{font-size:14px;font-weight:500;margin-bottom:6px}
+.fstep-desc{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.fstep-tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;margin-top:8px}
+.loop-steps{display:flex;gap:0;flex-wrap:wrap}
+.lstep{flex:1;min-width:140px;padding:16px 14px;border:0.5px solid var(--border);text-align:center;border-right:none}
+.lstep:last-child{border-right:0.5px solid var(--border)}
+.lstep:first-child{border-radius:var(--radius-lg) 0 0 var(--radius-lg)}
+.lstep:last-child{border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+@media(max-width:600px){.lstep{min-width:100%;border-right:0.5px solid var(--border);border-bottom:none}.lstep:last-child{border-bottom:0.5px solid var(--border)}.lstep:first-child{border-radius:var(--radius-lg) var(--radius-lg) 0 0}.lstep:last-child{border-radius:0 0 var(--radius-lg) var(--radius-lg)}}
+.lstep-icon{font-size:22px;margin-bottom:8px}
+.lstep-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.lstep-desc{font-size:12px;color:var(--text-secondary);line-height:1.4}
+.esc-row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:var(--radius);margin-bottom:8px}
+.esc-trigger{font-size:12px;font-weight:500;margin-bottom:3px}
+.esc-action{font-size:12px;opacity:.8}
+.setup-step{display:flex;gap:16px;margin-bottom:20px;align-items:flex-start}
+.setup-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.setup-title{font-size:14px;font-weight:500;margin-bottom:6px}
+.setup-desc{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.setup-code{font-family:'DM Mono',ui-monospace,monospace;font-size:12px;background:var(--bg-secondary);padding:10px 14px;border-radius:var(--radius);margin-top:8px;border:0.5px solid var(--border);line-height:1.8;overflow-x:auto;white-space:pre}
+.sub-section{font-size:14px;font-weight:500;margin:24px 0 12px}
+.safety-desc{font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px}
+.footer{text-align:center;padding:2rem 0;font-size:12px;color:var(--text-tertiary)}
+.footer a{color:var(--accent-info);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">Open source framework</div>
+    <h1>Agent-first engineering framework</h1>
+    <p>A guide for people who've never used Claude Code before</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="show('big-idea')">The big idea</button>
+    <button class="tab" onclick="show('layers')">The 6 layers</button>
+    <button class="tab" onclick="show('agents')">Your agent team</button>
+    <button class="tab" onclick="show('skills')">Skills</button>
+    <button class="tab" onclick="show('flow')">Daily workflow</button>
+    <button class="tab" onclick="show('loop')">Compounding loop</button>
+    <button class="tab" onclick="show('safety')">Safety nets</button>
+    <button class="tab" onclick="show('setup')">Setup</button>
+  </div>
+
+  <!-- BIG IDEA -->
+  <div id="panel-big-idea" class="panel active">
+    <div class="card">
+      <div class="section-title">What is this, really?</div>
+      <div class="section-desc">Imagine you're a construction project manager. You don't mix the concrete yourself — you have specialists: an architect who reads the plans, a safety inspector who checks the work, and tradespeople who do the actual building. You make the decisions; they handle the execution.</div>
+      <div class="section-desc">This framework does the same thing for software. Instead of you typing code, you tell Claude Code what needs building, and a team of specialized AI agents handles the execution. You stay at the level of decisions and direction.</div>
+      <div class="comparison">
+        <div class="compare-card">
+          <div class="compare-label">Without the framework</div>
+          <div class="compare-body">You type code → Claude suggests → you type more → things break → you debug → repeat</div>
+        </div>
+        <div class="compare-card accent">
+          <div class="compare-label accent">With the framework</div>
+          <div class="compare-body">You describe what's needed → agents plan, write tests, implement, verify → you review decisions</div>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">The key mental shift</div>
+        <div class="callout-body">You are the <strong>engineering manager</strong>, not the coder. Claude's agents are your specialists. The framework is the set of standing rules they all follow — so you don't have to repeat yourself every session.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYERS -->
+  <div id="panel-layers" class="panel">
+    <div class="card" style="padding:1.25rem">
+      <div class="section-desc" style="margin-bottom:14px">The framework is built from six layers. Click each one to see what it does.</div>
+
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-head">
+          <div class="layer-icon" style="background:var(--accent-info-bg)"><i class="ti ti-file-text" style="color:var(--accent-info)" aria-hidden="true"></i></div>
+          <div class="layer-title">CLAUDE.md — the constitution</div>
+          <div class="layer-badge">Always loaded</div>
+          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+        <div class="layer-body">
+          This is the single most important file. Every time you open Claude Code, it reads this file first. Think of it as the standing orders for every agent — architectural rules, what agents to use and when, commit conventions, which skills exist. It's capped at 120 lines on purpose: research shows that beyond that, agents start missing rules.
+          <ul>
+            <li>Hard rules the AI must follow (no exceptions)</li>
+            <li>Escape hatches — when to stop and ask a human</li>
+            <li>Which agents and skills are available</li>
+            <li>References to longer docs in <code>.claude/docs/</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-head">
+          <div class="layer-icon" style="background:var(--accent-success-bg)"><i class="ti ti-book" style="color:var(--accent-success)" aria-hidden="true"></i></div>
+          <div class="layer-title">Skills — on-demand knowledge</div>
+          <div class="layer-badge">8 skills</div>
+          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+        <div class="layer-body">
+          Skills are like reference manuals that Claude reads only when needed. If you're creating a REST API endpoint, Claude automatically loads the <code>api-conventions</code> skill. If something is broken, it loads the <code>runbook</code>. This keeps the token cost low — only the relevant knowledge loads.
+          <ul>
+            <li><strong>setup</strong> + <strong>tutorial</strong> — onboarding (run once)</li>
+            <li><strong>verification</strong> — end-to-end feature confirmation</li>
+            <li><strong>tdd-practices</strong> — test-first enforcement</li>
+            <li><strong>runbook</strong> — structured debugging protocol</li>
+            <li><strong>session-notes</strong> — structured record-keeping</li>
+            <li><strong>adr-recorder</strong> — capturing decisions</li>
+            <li><strong>api-conventions</strong> — REST design rules</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-head">
+          <div class="layer-icon" style="background:var(--accent-warning-bg)"><i class="ti ti-users" style="color:var(--accent-warning)" aria-hidden="true"></i></div>
+          <div class="layer-title">Agents — your specialist team</div>
+          <div class="layer-badge">4 agents</div>
+          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+        <div class="layer-body">
+          Instead of one general-purpose AI doing everything, you have four specialists. Each has a specific job, specific tools, and runs in an isolated environment so a mistake in one can't affect the others.
+          <ul>
+            <li><strong>planner</strong> — reads the codebase, never writes code</li>
+            <li><strong>tdd-writer</strong> — writes failing tests only</li>
+            <li><strong>code-reviewer</strong> — reviews changes, never writes code</li>
+            <li><strong>quality-gate</strong> — checks everything is really done</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-head">
+          <div class="layer-icon" style="background:var(--accent-danger-bg)"><i class="ti ti-shield-check" style="color:var(--accent-danger)" aria-hidden="true"></i></div>
+          <div class="layer-title">Hooks — automatic quality gates</div>
+          <div class="layer-badge">3 hooks</div>
+          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+        <div class="layer-body">
+          Shell scripts that fire automatically at key moments — you don't have to remember to run them. They're the safety net that catches problems before they become commits.
+          <ul>
+            <li>After every file write → runs your test suite automatically</li>
+            <li>Before every git commit → blocks it if tests haven't passed</li>
+            <li>When Claude finishes a task → reminds you to capture lessons</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-head">
+          <div class="layer-icon" style="background:var(--bg-secondary)"><i class="ti ti-plug" style="color:var(--text-secondary)" aria-hidden="true"></i></div>
+          <div class="layer-title">MCP — external connections</div>
+          <div class="layer-badge">Optional</div>
+          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+        <div class="layer-body">
+          MCP (Model Context Protocol) lets Claude connect to external tools — GitHub, databases, live documentation. Your tokens are stored locally in <code>.mcp.json</code> which is gitignored, so they never get committed.
+          <ul>
+            <li><strong>GitHub</strong> — read PRs, issues, repo context</li>
+            <li><strong>Context7</strong> — live docs (no more hallucinated APIs)</li>
+            <li><strong>Database</strong> — read-only query access for debugging</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-head">
+          <div class="layer-icon" style="background:var(--bg-secondary)"><i class="ti ti-history" style="color:var(--text-secondary)" aria-hidden="true"></i></div>
+          <div class="layer-title">ADRs — decision history</div>
+          <div class="layer-badge">Permanent record</div>
+          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+        <div class="layer-body">
+          Architecture Decision Records. When you make a significant technical decision, you record it as a short markdown file. Next time anyone works on that area, the relevant ADR is read first — so decisions aren't accidentally reversed.
+          <ul>
+            <li>Numbered files: <code>adr/0001-framework-setup.md</code></li>
+            <li>The <code>adr-recorder</code> skill creates them for you</li>
+            <li>Keeps CLAUDE.md short — details live in ADRs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENTS -->
+  <div id="panel-agents" class="panel">
+    <div class="section-desc">Four specialists, each with a specific job. You dispatch them by typing a command in Claude Code.</div>
+    <div class="agent-grid">
+      <div class="agent-card">
+        <div class="agent-header"><div class="agent-icon" style="background:var(--accent-info-bg)"><i class="ti ti-map-search" style="color:var(--accent-info);font-size:15px" aria-hidden="true"></i></div><div class="agent-name">planner</div></div>
+        <div class="agent-role">Phase 1 — reads before anyone writes</div>
+        <div class="agent-desc">Scouts the codebase, maps what will be affected, produces a numbered plan for you to review. Has no write access — it physically cannot change files.</div>
+        <div class="agent-rule" style="background:var(--accent-info-bg);border-color:var(--accent-info-border);color:var(--accent-info)"><strong>When:</strong> before any task touching more than one file</div>
+        <div class="agent-cmd">Type: <code>Use the planner agent to explore [task]</code></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header"><div class="agent-icon" style="background:var(--accent-success-bg)"><i class="ti ti-test-pipe" style="color:var(--accent-success);font-size:15px" aria-hidden="true"></i></div><div class="agent-name">tdd-writer</div></div>
+        <div class="agent-role">Phase 3 start — defines correctness first</div>
+        <div class="agent-desc">Writes failing tests before implementation exists. Cannot write to <code>src/</code> — tests only. Forces you to define what "correct" means before building.</div>
+        <div class="agent-rule" style="background:var(--accent-success-bg);border-color:var(--accent-success-border);color:var(--accent-success)"><strong>When:</strong> before writing any feature code</div>
+        <div class="agent-cmd">Type: <code>Use the tdd-writer agent to write tests for [behaviour]</code></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header"><div class="agent-icon" style="background:var(--accent-warning-bg)"><i class="ti ti-eye-check" style="color:var(--accent-warning);font-size:15px" aria-hidden="true"></i></div><div class="agent-name">code-reviewer</div></div>
+        <div class="agent-role">Phase 4 — gates every merge</div>
+        <div class="agent-desc">Reviews code for architecture, security, and correctness. Has no write access. Returns a verdict: approved, approved with notes, or blocked.</div>
+        <div class="agent-rule" style="background:var(--accent-warning-bg);border-color:var(--accent-warning-border);color:var(--accent-warning)"><strong>When:</strong> before every merge or PR</div>
+        <div class="agent-cmd">Type: <code>Use the code-reviewer agent to review this change</code></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header"><div class="agent-icon" style="background:var(--accent-danger-bg)"><i class="ti ti-circle-check" style="color:var(--accent-danger);font-size:15px" aria-hidden="true"></i></div><div class="agent-name">quality-gate</div></div>
+        <div class="agent-role">Second opinion — are you really done?</div>
+        <div class="agent-desc">Checks six things before you close a task: tests pass, verification confirmed, plan complete, no stray TODOs, notes current, commit scoped correctly.</div>
+        <div class="agent-rule" style="background:var(--accent-danger-bg);border-color:var(--accent-danger-border);color:var(--accent-danger)"><strong>When:</strong> before closing any task</div>
+        <div class="agent-cmd">Type: <code>Use the quality-gate agent to evaluate this task</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div id="panel-skills" class="panel">
+    <div class="card">
+      <div class="section-desc">Skills are knowledge modules that load only when relevant — keeping Claude's memory clean. You get 8 out of the box.</div>
+      <div class="skill-list">
+        <div class="skill-row"><div class="skill-icon" style="background:var(--accent-info-bg)"><i class="ti ti-bolt" style="color:var(--accent-info);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">setup</div><div class="skill-desc">Scans your codebase on day one and auto-fills all placeholder files. Run once.</div></div></div>
+        <div class="skill-row"><div class="skill-icon" style="background:var(--accent-success-bg)"><i class="ti ti-school" style="color:var(--accent-success);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">tutorial</div><div class="skill-desc">Interactive 8-step walkthrough inside Claude Code using your actual project. About 20 minutes.</div></div></div>
+        <div class="skill-row"><div class="skill-icon" style="background:var(--accent-warning-bg)"><i class="ti ti-clipboard-check" style="color:var(--accent-warning);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">verification</div><div class="skill-desc">End-to-end flows for your most important features. Proves the feature works from the user's perspective.</div></div></div>
+        <div class="skill-row"><div class="skill-icon" style="background:var(--accent-danger-bg)"><i class="ti ti-test-pipe" style="color:var(--accent-danger);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">tdd-practices</div><div class="skill-desc">Test-first rules. Defines the sequence: failing test → implementation → green.</div></div></div>
+        <div class="skill-row"><div class="skill-icon" style="background:var(--bg-secondary)"><i class="ti ti-bug" style="color:var(--text-secondary);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">runbook</div><div class="skill-desc">Structured debugging protocol. Systematic investigation instead of guess-and-check.</div></div></div>
+        <div class="skill-row"><div class="skill-icon" style="background:var(--bg-secondary)"><i class="ti ti-notes" style="color:var(--text-secondary);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">session-notes</div><div class="skill-desc">Structured notes written during work. Summaries come from the notes, not from Claude's memory.</div></div></div>
+        <div class="skill-row"><div class="skill-icon" style="background:var(--bg-secondary)"><i class="ti ti-archive" style="color:var(--text-secondary);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">adr-recorder</div><div class="skill-desc">Captures architectural decisions into numbered files in <code>adr/</code>.</div></div></div>
+        <div class="skill-row"><div class="skill-icon" style="background:var(--bg-secondary)"><i class="ti ti-api" style="color:var(--text-secondary);font-size:15px" aria-hidden="true"></i></div><div><div class="skill-name">api-conventions</div><div class="skill-desc">REST design rules: kebab-case URLs, camelCase JSON, pagination, status codes.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW -->
+  <div id="panel-flow" class="panel">
+    <div class="card">
+      <div class="section-desc">Every task that touches more than one file follows this 4-phase flow. It's enforced in CLAUDE.md so Claude follows it automatically.</div>
+      <div class="flow-steps">
+        <div class="fstep"><div class="fstep-track"><div class="fstep-num" style="background:var(--accent-info-bg);color:var(--accent-info)">1</div><div class="fstep-line"></div></div><div class="fstep-body"><div class="fstep-title">Explore (read-only)</div><div class="fstep-desc">Dispatch the planner agent. It reads the codebase, maps everything that will be affected, identifies risks, and produces a numbered plan. You review and approve before anything is written.</div><span class="fstep-tag" style="background:var(--accent-info-bg);color:var(--accent-info);border:0.5px solid var(--accent-info-border)">planner agent</span></div></div>
+        <div class="fstep"><div class="fstep-track"><div class="fstep-num" style="background:var(--accent-success-bg);color:var(--accent-success)">2</div><div class="fstep-line"></div></div><div class="fstep-body"><div class="fstep-title">Plan (approved by you)</div><div class="fstep-desc">You review the planner's numbered task list. Approve, modify, or ask questions. Nothing is implemented until you give the go-ahead. This is your most important moment of control.</div><span class="fstep-tag" style="background:var(--accent-success-bg);color:var(--accent-success);border:0.5px solid var(--accent-success-border)">human decision</span></div></div>
+        <div class="fstep"><div class="fstep-track"><div class="fstep-num" style="background:var(--accent-warning-bg);color:var(--accent-warning)">3</div><div class="fstep-line"></div></div><div class="fstep-body"><div class="fstep-title">Implement (tests first)</div><div class="fstep-desc">Dispatch tdd-writer to write failing tests that define what "correct" looks like. Then implement the code to make those tests pass. Hooks run tests automatically after every file write.</div><span class="fstep-tag" style="background:var(--accent-warning-bg);color:var(--accent-warning);border:0.5px solid var(--accent-warning-border)">tdd-writer → implement → hooks</span></div></div>
+        <div class="fstep"><div class="fstep-track"><div class="fstep-num" style="background:var(--accent-danger-bg);color:var(--accent-danger)">4</div></div><div class="fstep-body"><div class="fstep-title">Verify (done means confirmed)</div><div class="fstep-desc">Run the verification skill to confirm the feature works end-to-end. Dispatch the code-reviewer before merging. Dispatch the quality-gate to confirm everything is complete.</div><span class="fstep-tag" style="background:var(--accent-danger-bg);color:var(--accent-danger);border:0.5px solid var(--accent-danger-border)">verification + reviewer + quality-gate</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOOP -->
+  <div id="panel-loop" class="panel">
+    <div class="card">
+      <div class="section-desc">The compounding loop is the most important habit. Every session makes the next one faster. The session-end hook fires these questions automatically.</div>
+      <div class="loop-steps">
+        <div class="lstep"><div class="lstep-icon"><i class="ti ti-alert-circle" style="color:var(--accent-warning)" aria-hidden="true"></i></div><div class="lstep-title">Task happens</div><div class="lstep-desc">You build something, fix a bug, or make a decision</div></div>
+        <div class="lstep"><div class="lstep-icon"><i class="ti ti-question-mark" style="color:var(--text-secondary)" aria-hidden="true"></i></div><div class="lstep-title">Ask 3 questions</div><div class="lstep-desc">Did Claude get something wrong? Was there a decision? Did a workflow take many turns?</div></div>
+        <div class="lstep"><div class="lstep-icon"><i class="ti ti-file-plus" style="color:var(--accent-info)" aria-hidden="true"></i></div><div class="lstep-title">Codify the lesson</div><div class="lstep-desc">Add a rule to CLAUDE.md, create a skill, or record an ADR</div></div>
+        <div class="lstep"><div class="lstep-icon"><i class="ti ti-trending-up" style="color:var(--accent-success)" aria-hidden="true"></i></div><div class="lstep-title">Next session is faster</div><div class="lstep-desc">The framework remembers so you don't repeat yourself</div></div>
+      </div>
+      <div class="callout" style="margin-top:20px">
+        <div class="callout-title">The three questions (fired automatically at session end)</div>
+        <div class="callout-body" style="line-height:2">
+          1. Did Claude get something wrong repeatedly? → Add a rule to <code>CLAUDE.md</code><br>
+          2. Was there an architectural decision? → Use the <code>adr-recorder</code> skill<br>
+          3. Did a workflow take many turns? → Create a new skill
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:13px;color:var(--text-secondary)">Teams that do this consistently go from 1.5× productivity on day one to 5–10× by month two. Teams that skip it stay at 1.5× forever.</div>
+    </div>
+  </div>
+
+  <!-- SAFETY -->
+  <div id="panel-safety" class="panel">
+    <div class="card">
+      <div class="section-desc">Three kinds of safety nets prevent the most common ways AI-assisted development goes wrong.</div>
+
+      <div class="sub-section">1. Escape hatches — stopping stuck agents</div>
+      <div class="esc-row" style="background:var(--accent-danger-bg)"><i class="ti ti-rotate-clockwise" style="color:var(--accent-danger);font-size:20px;margin-top:2px;flex-shrink:0" aria-hidden="true"></i><div><div class="esc-trigger" style="color:var(--accent-danger)">Same tool output 3 times in a row</div><div class="esc-action" style="color:var(--accent-danger)">You are in a loop — STOP, change approach or ask human</div></div></div>
+      <div class="esc-row" style="background:var(--accent-warning-bg)"><i class="ti ti-x" style="color:var(--accent-warning);font-size:20px;margin-top:2px;flex-shrink:0" aria-hidden="true"></i><div><div class="esc-trigger" style="color:var(--accent-warning)">Same fix attempted 3 times, no progress</div><div class="esc-action" style="color:var(--accent-warning)">STOP, summarize what you tried, ask the human</div></div></div>
+      <div class="esc-row" style="background:var(--bg-secondary)"><i class="ti ti-clock" style="color:var(--text-secondary);font-size:20px;margin-top:2px;flex-shrink:0" aria-hidden="true"></i><div><div class="esc-trigger">10 debugging calls with no hypothesis</div><div class="esc-action">Invoke the runbook skill immediately</div></div></div>
+      <div class="esc-row" style="background:var(--bg-secondary)"><i class="ti ti-list-numbers" style="color:var(--text-secondary);font-size:20px;margin-top:2px;flex-shrink:0" aria-hidden="true"></i><div><div class="esc-trigger">15 tool calls on a single sub-task</div><div class="esc-action">Check in with the human before continuing</div></div></div>
+
+      <div class="sub-section">2. Hooks — automatic enforcement</div>
+      <div class="safety-desc">
+        <strong>After every file write</strong> → runs your test suite, marks pass/fail<br>
+        <strong>Before every git commit</strong> → blocks if tests haven't passed<br>
+        <strong>When Claude finishes</strong> → fires the compounding loop reminder
+      </div>
+
+      <div class="sub-section">3. Security defaults</div>
+      <div class="safety-desc">
+        <strong>.mcp.json is gitignored</strong> — API tokens can never be committed<br>
+        <strong>Deny list in settings.json</strong> — blocks <code>rm -rf</code>, <code>sudo</code>, writing to <code>.env</code> or <code>*.key</code><br>
+        <strong>Agent isolation</strong> — each agent runs in its own git worktree
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP -->
+  <div id="panel-setup" class="panel">
+    <div class="card">
+      <div class="section-desc">Five steps from zero to a working framework. Each step handles its own prerequisites.</div>
+      <div class="setup-steps">
+        <div class="setup-step"><div class="setup-num" style="background:var(--accent-info-bg);color:var(--accent-info)">1</div><div><div class="setup-title">Copy framework into your project root</div><div class="setup-desc">Clone to a temp location, then copy the contents (including hidden files) directly into your project root. The trailing <code>/.</code> is important — it copies hidden folders like <code>.claude/</code>.</div><div class="setup-code">git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/claude-framework
+rm -rf /tmp/claude-framework/.github
+rm -f  /tmp/claude-framework/README.md
+cd your-project
+cp -r /tmp/claude-framework/. .
+rm -rf /tmp/claude-framework</div><div style="margin-top:8px;font-size:12px;color:var(--text-secondary)">Already have <code>.claude/</code> files? Back them up first: <code>cp -r .claude/ .claude-backup/</code><br>Want the GitHub Actions PR review? Bootstrap will ask you about it and walk you through setup.</div></div></div>
+        <div class="setup-step"><div class="setup-num" style="background:var(--accent-success-bg);color:var(--accent-success)">2</div><div><div class="setup-title">Follow the installer prompts</div><div class="setup-desc">The installer backs up existing configs, configures your test command, appends to your .gitignore, and optionally adds the GitHub Actions PR review workflow.</div><div class="setup-code"># The installer handles everything — just answer the prompts</div></div></div>
+        <div class="setup-step"><div class="setup-num" style="background:var(--accent-warning-bg);color:var(--accent-warning)">3</div><div><div class="setup-title">Open Claude Code</div><div class="setup-desc">Claude reads CLAUDE.md automatically and loads all agents and skills.</div><div class="setup-code">claude</div></div></div>
+        <div class="setup-step"><div class="setup-num" style="background:var(--accent-danger-bg);color:var(--accent-danger)">4</div><div><div class="setup-title">Run the setup skill</div><div class="setup-desc">Claude scans your codebase and fills in every placeholder automatically. Creates 3–5 verification flows.</div><div class="setup-code">Run the setup skill</div></div></div>
+        <div class="setup-step"><div class="setup-num" style="background:var(--bg-secondary);color:var(--text-secondary)">5</div><div><div class="setup-title">Run the tutorial skill</div><div class="setup-desc">Interactive 20-minute walkthrough using your real project. Teaches by doing, not by explaining.</div><div class="setup-code">Run the tutorial skill</div></div></div>
+      </div>
+      <div class="callout" style="margin-top:20px">
+        <div class="callout-title">That's it.</div>
+        <div class="callout-body">The framework is now running. Every session after this, just open Claude Code in your project and it picks up where you left off.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://github.com/matias-gentile/claude-code-framework">github.com/matias-gentile/claude-code-framework</a><br>
+    Built on Anthropic Claude Code docs, Thariq Shihipar's Skills taxonomy, and SOTA agentic engineering practices 2025–2026
+  </div>
+</div>
+
+<script>
+function show(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');event.target.classList.add('active')}
+function toggleLayer(el){const o=el.classList.contains('open');document.querySelectorAll('.layer').forEach(l=>l.classList.remove('open'));if(!o)el.classList.add('open')}
+</script>
+</body>
+</html>

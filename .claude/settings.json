@@ -1,0 +1,74 @@
+{
+  "permissionMode": "auto",
+  "alwaysThinkingEnabled": true,
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Write(src/**)",
+      "Write(tests/**)",
+      "Write(docs/**)",
+      "Write(.claude/adr/**)",
+      "Write(.claude/docs/**)",
+      "Write(CLAUDE.md)",
+      "Write(AGENTS.md)",
+      "Write(.claude/hooks/.test-command)",
+      "Write(.claude/skills/**)",
+      "Write(.claude/agents/**)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git checkout*)",
+      "Bash(git branch*)"
+    ],
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(sudo*)",
+      "Bash(curl* | bash*)",
+      "Bash(wget* | bash*)",
+      "Bash(* --force-push*)",
+      "Write(.env*)",
+      "Write(**/*.secret*)",
+      "Write(**/*.key)",
+      "Write(**/*.pem)",
+      "Write(infrastructure/**)",
+      "Write(deploy/**)",
+      "Write(.claude/settings.json)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-edit-test.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-commit-check.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-end-reminder.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
