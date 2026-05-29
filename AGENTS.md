@@ -22,7 +22,8 @@
 ## Compounding Loop (IMPORTANT)
 - After every non-trivial task: ask "should this go in CLAUDE.md, a skill, or an ADR?"
 - If a bug or architectural choice surprised you: record it before closing the session
-- Use the `adr-recorder` skill to capture decisions; use `/compact` to summarize before `/clear`
+- Run `/session-review` at end of session — it drafts rules, ADRs, and skills for approval
+- Use `/compact` to summarize context before `/clear`
 
 ## Agent Workforce
 - Dispatch `planner` before any multi-file task — it produces the plan, you review it

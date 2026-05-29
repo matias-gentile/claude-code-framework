@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # Stop hook: fires when Claude finishes a task
-# Prompts the compounding loop: capture lessons before clearing context
+# Prompts the compounding loop via the /session-review command
 
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🔁 Compounding Loop Checkpoint"
-echo "   Before you /clear or close the session:"
-echo "   1. Any architectural decisions made? → run 'adr-recorder' skill"
-echo "   2. Any rules Claude got wrong? → add to CLAUDE.md"
-echo "   3. Any repeatable workflow? → consider a new skill"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Session complete."
+echo ""
+echo "  Before you /clear, capture what this session taught:"
+echo "  Run: /session-review"
+echo ""
+echo "  It will draft any rules, ADRs, or skills for you"
+echo "  to approve — no writing from scratch."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
