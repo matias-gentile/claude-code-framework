@@ -24,7 +24,9 @@ The framework can be installed two ways:
 /plugin install agent-first-framework@claude-code-framework
 ```
 
-Commands are namespaced `/agent-first-framework:setup`, etc. The plugin's components live in Claude Code's plugin cache, not your project — nothing is copied into your repo except what `/agent-first-framework:setup` generates (CLAUDE.md, .claude/docs/, etc).
+Commands are namespaced `/agent-first-framework:setup`, etc. The plugin's components live in Claude Code's plugin cache, not your project.
+
+**Important:** in plugin mode you MUST run the setup command first. The plugin ships the agents, skills, commands, and hooks — but CLAUDE.md (the framework's rules and 4-phase flow) is project memory that can't be bundled in a plugin. The setup command creates it from a template on first run, then enriches it with your project's conventions. Without running setup, you have the tools but not the rules.
 
 ### Copied into a single project
 
