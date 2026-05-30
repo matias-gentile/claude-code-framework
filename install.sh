@@ -153,11 +153,11 @@ for f in CLAUDE.md AGENTS.md .mcp.json.example; do
 done
 
 # .claude/ directory (merge, don't destroy)
-# Copy each subdirectory explicitly so we don't clobber existing files
-for subdir in agents skills hooks adr docs; do
-  if [ -d "$SOURCE_DIR/.claude/$subdir" ]; then
+# Source dirs are at plugin root; they install into the target's .claude/
+for subdir in agents skills hooks adr docs commands; do
+  if [ -d "$SOURCE_DIR/$subdir" ]; then
     mkdir -p "$TARGET_DIR/.claude/$subdir"
-    cp -r "$SOURCE_DIR/.claude/$subdir/." "$TARGET_DIR/.claude/$subdir/"
+    cp -r "$SOURCE_DIR/$subdir/." "$TARGET_DIR/.claude/$subdir/"
     print_ok ".claude/$subdir/"
   fi
 done

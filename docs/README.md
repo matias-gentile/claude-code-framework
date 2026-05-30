@@ -15,12 +15,27 @@ A plug-and-play framework that gives Claude Code a six-layer engineering harness
 
 ## Install
 
+The framework can be installed two ways:
+
+### As a plugin (Claude Code v2.1+, recommended)
+
+```bash
+/plugin marketplace add matias-gentile/claude-code-framework
+/plugin install agent-first-framework@claude-code-framework
+```
+
+Commands are namespaced `/agent-first-framework:setup`, etc. The plugin's components live in Claude Code's plugin cache, not your project — nothing is copied into your repo except what `/agent-first-framework:setup` generates (CLAUDE.md, .claude/docs/, etc).
+
+### Copied into a single project
+
 ```bash
 git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/claude-framework
 cd your-project
 bash /tmp/claude-framework/install.sh
 rm -rf /tmp/claude-framework
 ```
+
+This copies components into your project's `.claude/` directory. Commands are namespaced `/project:setup`, etc.
 
 The installer handles everything: copies only what's needed, never overwrites your files, appends to your `.gitignore`, makes hooks executable, configures your test command, and optionally adds the CI workflow.
 

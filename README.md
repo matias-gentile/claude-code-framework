@@ -1,47 +1,55 @@
 # Agent-First Engineering Framework for Claude Code
 
-A plug-and-play framework that gives Claude Code a production-grade engineering harness. Drops into any existing project without touching your files.
+A production-grade engineering harness for Claude Code — 4 specialist agents, 8 skills, automatic quality gates, and a compounding loop that turns every session's lessons into permanent rules.
 
-→ **[Full documentation](.claude/docs/README.md)** — setup paths, directory structure, extending the framework
-→ **[Interactive guide](.claude/docs/guide.html)** — visual walkthrough (open in browser)
+→ **[Full documentation](docs/README.md)**
+→ **[Interactive guide](docs/guide.html)** (open in browser)
 
 ## Install
 
-```bash
-# 1. Clone somewhere temporary
-git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/claude-framework
+### Option A — as a plugin (recommended, Claude Code v2.1+)
 
-# 2. Go into your project and run the installer
+```bash
+# Add this repo as a marketplace, then install
+/plugin marketplace add matias-gentile/claude-code-framework
+/plugin install agent-first-framework@claude-code-framework
+```
+
+Commands are then namespaced as `/agent-first-framework:setup`, `/agent-first-framework:plan`, etc.
+
+To test locally before publishing:
+```bash
+git clone https://github.com/matias-gentile/claude-code-framework.git
+claude --plugin-dir ./claude-code-framework
+```
+
+### Option B — copy into a single project (no plugin system)
+
+```bash
+git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/claude-framework
 cd your-project
 bash /tmp/claude-framework/install.sh
-
-# 3. Clean up
 rm -rf /tmp/claude-framework
 ```
 
-The installer copies only what's needed, never overwrites your existing files, and walks you through configuration interactively.
-
-## What gets installed
-
-**3 files at your project root** (required by Claude Code):
-- `CLAUDE.md` — the rules every agent follows
-- `AGENTS.md` — universal format for other AI tools
-- `.mcp.json.example` — MCP integration template
-
-**Everything else inside `.claude/`:**
-- `agents/` — 4 specialists: planner, tdd-writer, code-reviewer, quality-gate
-- `skills/` — 8 on-demand knowledge modules
-- `hooks/` — 3 automatic quality gates
-- `adr/` — architectural decision records
-- `docs/` — stack docs, repo structure, contributing guide, interactive guide
-
-**Not installed unless you opt in:**
-- `.github/workflows/` — CI workflow (installer asks you)
+This copies the framework into your project's `.claude/` directory. Commands are namespaced as `/project:setup`, etc.
 
 ## After install
 
 ```bash
-claude                    # open Claude Code
-Run the setup skill       # auto-fills placeholders from your codebase
-Run the tutorial skill    # 20-min interactive walkthrough
+claude
+/agent-first-framework:setup      # (plugin)  — or  /project:setup  (copied)
 ```
+
+The setup command scans your codebase, fills in placeholders, enriches CLAUDE.md with project-specific rules, configures MCP, and creates verification flows.
+
+## What you get
+
+**Agents** (`agents/`): planner, tdd-writer, code-reviewer, quality-gate
+**Skills** (`skills/`): setup, tutorial, verification, tdd-practices, runbook, session-notes, adr-recorder, api-conventions
+**Commands** (`commands/`): setup, tutorial, plan, review, adr, session-review
+**Hooks** (`hooks/`): SessionStart (loads prior context), UserPromptSubmit (blocks secrets, injects ADRs), PostToolUse (auto-test), PreToolUse (commit gate), PreCompact (preserve notes), Stop (compounding loop)
+
+## License
+
+MIT

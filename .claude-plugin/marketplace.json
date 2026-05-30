@@ -1,0 +1,13 @@
+{
+  "name": "claude-code-framework",
+  "owner": {
+    "name": "matias-gentile"
+  },
+  "plugins": [
+    {
+      "name": "agent-first-framework",
+      "source": "./",
+      "description": "Production-grade engineering harness: 4 specialist agents, 8 skills, automatic quality gates, and a compounding loop that turns each session's lessons into permanent rules."
+    }
+  ]
+}
