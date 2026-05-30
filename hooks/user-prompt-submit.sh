@@ -26,15 +26,15 @@ ADR_DIR=".claude/adr"
 
 if [ -d "$ADR_DIR" ]; then
   # Extract meaningful words from the prompt (4+ chars)
-  KEYWORDS=$(echo "$PROMPT" | tr '[:upper:]' '[:lower:]' | grep -oE '[a-z]{4,}' | sort -u | head -20)
+  KEYWORDS=$(echo "$PROMPT" | tr '[:upper:]' '[:lower:]' | grep -oE '[a-z]{4,}' | sort -u | head -20 || true)
 
   for adr in "$ADR_DIR"/*.md; do
     [ -f "$adr" ] || continue
-    ADR_TITLE=$(grep -m1 "^# " "$adr" 2>/dev/null | sed 's/^# //' | tr '[:upper:]' '[:lower:]')
+    ADR_TITLE=$(grep -m1 "^# " "$adr" 2>/dev/null | sed 's/^# //' | tr '[:upper:]' '[:lower:]' || true)
     # If any prompt keyword appears in the ADR title, surface it
     for kw in $KEYWORDS; do
       if echo "$ADR_TITLE" | grep -q "$kw"; then
-        TITLE=$(grep -m1 "^# " "$adr" | sed 's/^# //')
+        TITLE=$(grep -m1 "^# " "$adr" 2>/dev/null | sed 's/^# //' || true)
         echo "Relevant decision on file: ${TITLE} (see ${adr}). Respect this decision unless the user explicitly asks to revisit it."
         exit 0
       fi

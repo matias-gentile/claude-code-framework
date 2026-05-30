@@ -15,9 +15,11 @@ You are NOT the implementer. You are NOT the reviewer. You are the final gate.
 Run through every item. Do not skip any.
 
 ### 1. Tests
-- Run the test command: `cat .claude/hooks/.test-command && $(cat .claude/hooks/.test-command)`
+- First check the test-result marker the post-edit hook writes: if `/tmp/claude-tests-passed` exists and is newer than the most recently edited source file, tests passed on the last edit.
+- If you have Bash permission for the project's test runner, you may also run it directly: `cat .claude/hooks/.test-command` then run that command. NOTE: as a subagent you cannot answer permission prompts — if the test command is not in the project's allow list, the run will be denied. In that case, fall back to the marker file and to reading test output, and report that you could not execute tests directly.
 - Do all tests pass? Are there new tests covering the changed behaviour?
 - If tests are missing for changed code → FAIL
+- If you genuinely cannot determine test status (no marker, no permission) → mark Tests ⚠️ and tell the human to run the suite manually before merge
 
 ### 2. Verification
 - Read `.claude/skills/verification/SKILL.md`

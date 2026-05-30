@@ -31,8 +31,10 @@ if [ -d ".claude/adr" ] || [ -d "adr" ]; then
   [ -d "adr" ] && ADR_DIR="adr"
   RECENT_ADR=$(ls -t "$ADR_DIR"/*.md 2>/dev/null | head -1)
   if [ -n "$RECENT_ADR" ]; then
-    ADR_TITLE=$(grep -m1 "^# " "$RECENT_ADR" 2>/dev/null | sed 's/^# //')
-    OUT="${OUT}Most recent architectural decision: ${ADR_TITLE}. "
+    ADR_TITLE=$(grep -m1 "^# " "$RECENT_ADR" 2>/dev/null | sed 's/^# //' || true)
+    if [ -n "$ADR_TITLE" ]; then
+      OUT="${OUT}Most recent architectural decision: ${ADR_TITLE}. "
+    fi
   fi
 fi
 
