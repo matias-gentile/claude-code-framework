@@ -170,7 +170,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
     <div><div class="stat-n">4</div><div class="stat-l">Specialist agents</div></div>
     <div><div class="stat-n">8</div><div class="stat-l">Knowledge skills</div></div>
     <div><div class="stat-n">6</div><div class="stat-l">Slash commands</div></div>
-    <div><div class="stat-n">3</div><div class="stat-l">Auto quality gates</div></div>
+    <div><div class="stat-n">6</div><div class="stat-l">Lifecycle hooks</div></div>
   </div>
 </header>
 
@@ -231,7 +231,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
 
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">1</div><div class="lname">CLAUDE.md — the rules file</div><div class="ltag">Always loaded · ≤120 lines</div><i class="ti ti-chevron-down chevron"></i></div>
-    <div class="lbody">Read at the start of every session, automatically. This is where your standing orders live — architectural rules, which agents to use when, commit conventions, active skills. Capped at 120 lines because research shows agents miss rules beyond that limit.<br><br><strong>Automatically enriched</strong> by <code>/project:setup</code>, which scans your codebase and extracts project-specific rules across 5 categories: module boundaries, wrapper conventions, naming surprises, data shape invariants, and error handling patterns.</div>
+    <div class="lbody">Read at the start of every session, automatically. This is where your standing orders live — architectural rules, which agents to use when, commit conventions, active skills. Capped at 120 lines because research shows agents miss rules beyond that limit.<br><br><strong>Automatically enriched</strong> by the <code>setup</code> command, which scans your codebase and extracts project-specific rules across 5 categories: module boundaries, wrapper conventions, naming surprises, data shape invariants, and error handling patterns.</div>
   </div>
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">2</div><div class="lname">Skills — on-demand knowledge</div><div class="ltag">8 skills · loads when relevant</div><i class="ti ti-chevron-down chevron"></i></div>
@@ -242,8 +242,8 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
     <div class="lbody">Four specialists, each with a specific job and restricted tools. They run in isolated environments — a mistake in one cannot affect the others.<ul><li><strong>planner</strong> — reads the codebase, produces a plan, never writes code</li><li><strong>tdd-writer</strong> — writes failing tests before implementation starts</li><li><strong>code-reviewer</strong> — reviews for architecture and security, never edits files</li><li><strong>quality-gate</strong> — runs 6 checks before any task closes</li></ul></div>
   </div>
   <div class="layer" onclick="tgl(this)">
-    <div class="lhead"><div class="lnum">4</div><div class="lname">Hooks — automatic quality gates</div><div class="ltag">3 hooks · deterministic</div><i class="ti ti-chevron-down chevron"></i></div>
-    <div class="lbody">Shell scripts that fire at lifecycle events — they don't rely on the AI deciding to do the right thing.<ul><li><strong>After every file write</strong> — runs your test suite automatically</li><li><strong>Before every git commit</strong> — blocks if tests haven't passed</li><li><strong>When Claude finishes a task</strong> — prompts <code>/project:session-review</code></li></ul></div>
+    <div class="lhead"><div class="lnum">4</div><div class="lname">Hooks — automatic lifecycle automation</div><div class="ltag">6 hooks · deterministic</div><i class="ti ti-chevron-down chevron"></i></div>
+    <div class="lbody">Shell scripts that fire at lifecycle events — they don't rely on the AI deciding to do the right thing. The framework covers six of Claude Code's lifecycle events:<ul><li><strong>SessionStart</strong> — loads prior context: current branch, last session's handoff notes, most recent decision, and your test command. This is what carries knowledge forward between sessions.</li><li><strong>UserPromptSubmit</strong> — blocks prompts containing secrets (API keys, tokens) and injects the relevant past decision when your prompt touches a decided area.</li><li><strong>PostToolUse</strong> — after every file write, runs the matching test automatically.</li><li><strong>PreToolUse</strong> — before every git commit, blocks it if tests haven't passed.</li><li><strong>PreCompact</strong> — before context is compacted, prompts a save of session notes so nothing is lost.</li><li><strong>Stop</strong> — when Claude finishes, prompts the session-review command to capture lessons.</li></ul></div>
   </div>
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">5</div><div class="lname">MCP — external connections</div><div class="ltag">Optional · tokens gitignored</div><i class="ti ti-chevron-down chevron"></i></div>
@@ -251,7 +251,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   </div>
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">6</div><div class="lname">ADRs — decision history</div><div class="ltag">Permanent · auto-referenced</div><i class="ti ti-chevron-down chevron"></i></div>
-    <div class="lbody">Architecture Decision Records. Every significant technical decision gets recorded in <code>.claude/adr/</code>. Agents read the relevant ADR before touching that area — so decisions are never accidentally reversed. Created automatically by <code>/project:session-review</code> when it detects a decision was made.</div>
+    <div class="lbody">Architecture Decision Records. Every significant technical decision gets recorded in <code>.claude/adr/</code>. Agents read the relevant ADR before touching that area — so decisions are never accidentally reversed. Created automatically by the <code>session-review</code> command when it detects a decision was made.</div>
   </div>
 </section>
 
@@ -266,7 +266,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
       <div class="arole">Phase 1 — before any code</div>
       <div class="adesc">Reads the codebase, maps everything affected, checks ADRs for constraints, produces a numbered plan for your approval.</div>
       <div class="acant">Cannot write or edit any file.</div>
-      <div class="acmd">Command: <code>/project:plan [task]</code></div>
+      <div class="acmd">Command: <code>plan [task]</code></div>
     </div>
     <div class="acard">
       <div class="ahead"><div class="adot" style="background:#16a34a"></div><div class="aname">tdd-writer</div></div>
@@ -280,7 +280,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
       <div class="arole">Phase 4 — before every merge</div>
       <div class="adesc">Reviews changes for architectural alignment, security, and test coverage. Returns Approved, Approved with notes, or Blocked.</div>
       <div class="acant">Cannot write or edit any file.</div>
-      <div class="acmd">Command: <code>/project:review</code></div>
+      <div class="acmd">Command: <code>review</code></div>
     </div>
     <div class="acard">
       <div class="ahead"><div class="adot" style="background:#dc2626"></div><div class="aname">quality-gate</div></div>
@@ -295,13 +295,14 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <div class="label">Commands</div>
   <h2 class="serif" style="font-size:20px">Six slash commands. Available everywhere.</h2>
   <p class="body">All framework actions are slash commands — visible in the <code>/</code> menu in Claude Code. No documentation needed to discover them.</p>
+  <p class="body" style="margin-top:-0.5rem;font-size:13px;color:var(--ink-3)">The prefix depends on how you installed: <code>/agent-first-framework:setup</code> in plugin mode, <code>/project:setup</code> in copy mode. The command names below are shown without a prefix.</p>
   <div class="cmdlist">
-    <div class="cmdrow"><div class="cmdname">/project:setup</div><div class="cmddesc">Scan the codebase, fill placeholders, enrich CLAUDE.md with project-specific rules, create verification flows. Run once after installing.</div></div>
-    <div class="cmdrow"><div class="cmdname">/project:tutorial</div><div class="cmddesc">20-minute interactive walkthrough using your real project. Teaches by doing — dispatches agents on real tasks.</div></div>
-    <div class="cmdrow"><div class="cmdname">/project:plan</div><div class="cmddesc">Dispatch the planner agent — explore the codebase and produce an implementation plan before any code is written.</div></div>
-    <div class="cmdrow"><div class="cmdname">/project:review</div><div class="cmddesc">Dispatch the code-reviewer agent on current changes before any merge or pull request.</div></div>
-    <div class="cmdrow"><div class="cmdname">/project:adr</div><div class="cmddesc">Record an architectural decision into a permanent file in <code>.claude/adr/</code>.</div></div>
-    <div class="cmdrow"><div class="cmdname">/project:session-review</div><div class="cmddesc">Draft lessons from this session — rules, ADRs, skills — for your approval. Run before <code>/clear</code>. This is what makes the framework compound.</div></div>
+    <div class="cmdrow"><div class="cmdname">setup</div><div class="cmddesc">Scan the codebase, fill placeholders, enrich CLAUDE.md with project-specific rules, create verification flows. Run once after installing.</div></div>
+    <div class="cmdrow"><div class="cmdname">tutorial</div><div class="cmddesc">20-minute interactive walkthrough using your real project. Teaches by doing — dispatches agents on real tasks.</div></div>
+    <div class="cmdrow"><div class="cmdname">plan</div><div class="cmddesc">Dispatch the planner agent — explore the codebase and produce an implementation plan before any code is written.</div></div>
+    <div class="cmdrow"><div class="cmdname">review</div><div class="cmddesc">Dispatch the code-reviewer agent on current changes before any merge or pull request.</div></div>
+    <div class="cmdrow"><div class="cmdname">adr</div><div class="cmddesc">Record an architectural decision into a permanent file in <code>.claude/adr/</code>.</div></div>
+    <div class="cmdrow"><div class="cmdname">session-review</div><div class="cmddesc">Draft lessons from this session — rules, ADRs, skills — for your approval. Run before <code>/clear</code>. This is what makes the framework compound.</div></div>
   </div>
 </section>
 
@@ -313,7 +314,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <div class="flow">
     <div class="fstep">
       <div class="ftrack"><div class="fcircle serif" style="background:var(--blue-bg);color:var(--blue)">1</div><div class="fline"></div></div>
-      <div class="fbody"><div class="ftitle">Explore — read before writing</div><div class="fdesc">The planner agent reads the entire affected surface. It maps which files change, checks relevant ADRs for constraints, identifies risks, and produces a numbered plan. You approve before anything is written. Takes 2 minutes. Saves 30 minutes of rework.</div><span class="fwho" style="background:var(--blue-bg);color:var(--blue)">/project:plan → planner agent</span></div>
+      <div class="fbody"><div class="ftitle">Explore — read before writing</div><div class="fdesc">The planner agent reads the entire affected surface. It maps which files change, checks relevant ADRs for constraints, identifies risks, and produces a numbered plan. You approve before anything is written. Takes 2 minutes. Saves 30 minutes of rework.</div><span class="fwho" style="background:var(--blue-bg);color:var(--blue)">plan → planner agent</span></div>
     </div>
     <div class="fstep">
       <div class="ftrack"><div class="fcircle serif" style="background:var(--green-bg);color:var(--green)">2</div><div class="fline"></div></div>
@@ -325,7 +326,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
     </div>
     <div class="fstep">
       <div class="ftrack"><div class="fcircle serif" style="background:var(--paper-3);color:var(--ink-2)">4</div></div>
-      <div class="fbody"><div class="ftitle">Verify — done means confirmed, not just passing</div><div class="fdesc">The verification skill confirms the feature works from the user's perspective — not just that unit tests pass. The code-reviewer checks architecture and security. The quality-gate runs a 6-point checklist before the task closes.</div><span class="fwho" style="background:var(--paper-3);color:var(--ink-2)">/project:review + quality-gate + verification</span></div>
+      <div class="fbody"><div class="ftitle">Verify — done means confirmed, not just passing</div><div class="fdesc">The verification skill confirms the feature works from the user's perspective — not just that unit tests pass. The code-reviewer checks architecture and security. The quality-gate runs a 6-point checklist before the task closes.</div><span class="fwho" style="background:var(--paper-3);color:var(--ink-2)">review + quality-gate + verification</span></div>
     </div>
   </div>
 </section>
@@ -334,20 +335,21 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
 <section id="panel-smart" class="panel">
   <div class="label">The compounding loop</div>
   <h2 class="serif">Every session makes the next one faster.</h2>
-  <p class="body">Most teams use AI tools the same way forever. This framework is designed to compound — each session produces permanent improvements. The Stop hook prompts <code>/project:session-review</code> automatically when Claude finishes a task.</p>
+  <p class="body">Most teams use AI tools the same way forever. This framework is designed to compound — each session produces permanent improvements. The Stop hook prompts <code>session-review</code> automatically when Claude finishes a task.</p>
   <div class="loop">
     <div class="lc"><div class="lci">⚙️</div><div class="lcl">Task completes</div><div class="lcs">Feature ships, bug fixed, decision made</div></div>
     <div class="la">→</div>
-    <div class="lc"><div class="lci">🔍</div><div class="lcl">/project:session-review</div><div class="lcs">Analyzes what happened, identifies candidates</div></div>
+    <div class="lc"><div class="lci">🔍</div><div class="lcl">session-review</div><div class="lcs">Analyzes what happened, identifies candidates</div></div>
     <div class="la">→</div>
     <div class="lc"><div class="lci">📝</div><div class="lcl">Drafts artifacts</div><div class="lcs">Writes rule, ADR, or skill — you approve</div></div>
     <div class="la">→</div>
     <div class="lc"><div class="lci">📈</div><div class="lcl">Framework improves</div><div class="lcs">Next session starts smarter</div></div>
   </div>
   <div class="label">What gets captured and how</div>
-  <div class="card"><div class="card-t">Rules → CLAUDE.md</div><div class="card-b">If Claude got something wrong and had to be corrected, <code>/project:session-review</code> drafts the exact rule text with rationale and budget impact. You approve it. Next session, Claude follows it automatically.<br><br><em>Example: "Never import axios directly — use httpClient from src/lib/http.ts"</em></div></div>
+  <div class="card"><div class="card-t">Rules → CLAUDE.md</div><div class="card-b">If Claude got something wrong and had to be corrected, <code>session-review</code> drafts the exact rule text with rationale and budget impact. You approve it. Next session, Claude follows it automatically.<br><br><em>Example: "Never import axios directly — use httpClient from src/lib/http.ts"</em></div></div>
   <div class="card"><div class="card-t">Decisions → Architecture Decision Records</div><div class="card-b">If an architectural decision was made, a full ADR is drafted — context, decision, alternatives considered, consequences. Agents read it before touching that area in future sessions.<br><br><em>Example: ADR-0003 "Cursor-based pagination — rejected offset for performance"</em></div></div>
   <div class="card"><div class="card-t">Workflows → New skills</div><div class="card-b">If a workflow took many turns to get right, a new skill is drafted — name, description, content preview — for your approval. That workflow becomes a one-turn interaction next time.<br><br><em>Example: A deployment verification checklist that took 8 turns to establish</em></div></div>
+  <div class="card"><div class="card-t">Recurring roles → Custom agents</div><div class="card-b">If a session surfaced a distinct repeating role — database migrations, API client generation, localization — session-review proposes a new specialist agent with its own restricted tools and contracts, for your approval. The framework grows its own workforce based on your actual project.<br><br><em>Example: A db-migrator agent proposed after three sessions of migration work</em></div></div>
   <div class="callout"><div class="callout-t">The honest number</div><div class="callout-b">Teams using the compounding loop consistently report going from 1.5× productivity on day one to 5–10× by month two. Teams that skip it stay at 1.5× — because every session starts from the same baseline.</div></div>
 </section>
 
@@ -364,8 +366,11 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <div class="sitem"><div class="sicon" style="background:var(--paper-3)"><i class="ti ti-list-numbers" style="color:var(--ink-2)"></i></div><div><div class="strig">15 tool calls on a single sub-task</div><div class="sact">Human check-in required before continuing</div></div></div>
 
   <div class="label" style="margin-top:1.5rem">Automatic quality enforcement</div>
-  <div class="card"><div class="card-t">After every file write</div><div class="card-b">Your test suite runs automatically. Claude sees failures and fixes them before moving on — not after the whole feature is built.</div></div>
+  <div class="card"><div class="card-t">SessionStart — context carried forward</div><div class="card-b">At the start of every session, the branch, last session's handoff notes, the most recent architectural decision, and your test command are loaded automatically. The framework remembers across sessions.</div></div>
+  <div class="card"><div class="card-t">UserPromptSubmit — secret blocking + decision injection</div><div class="card-b">Prompts containing API keys, tokens, or private keys are blocked before Claude ever sees them. When your prompt touches an area with a recorded decision, that decision is surfaced automatically.</div></div>
+  <div class="card"><div class="card-t">After every file write</div><div class="card-b">The matching test runs automatically. Claude sees failures and fixes them before moving on — not after the whole feature is built.</div></div>
   <div class="card"><div class="card-t">Before every git commit</div><div class="card-b">The commit is blocked if tests haven't passed since the last edit. Broken code cannot be committed regardless of how the commit is triggered.</div></div>
+  <div class="card"><div class="card-t">Before compaction</div><div class="card-b">When context is about to be summarized away, a save of session notes is prompted first — so decisions and progress survive, generated from facts rather than fading memory.</div></div>
 
   <div class="label" style="margin-top:1.5rem">Security defaults</div>
   <div class="card"><div class="card-t">.mcp.json is gitignored</div><div class="card-b">API tokens and database credentials live in a local file explicitly excluded from version control. They cannot be accidentally committed.</div></div>
@@ -376,53 +381,74 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
 <!-- SETUP -->
 <section id="panel-setup" class="panel">
   <div class="label">Getting started</div>
-  <h2 class="serif">Four steps. About 30 minutes.</h2>
-  <p class="body">The installer copies only what belongs in your project, never overwrites your existing files, appends to your <code>.gitignore</code>, and walks you through configuration interactively.</p>
+  <h2 class="serif">Two ways to install. Pick one.</h2>
+  <p class="body">The framework installs either as a Claude Code plugin (recommended — one command, easy to update) or copied directly into a single project. Both deliver identical functionality.</p>
+
+  <div class="label" style="margin-top:1.5rem">Option A — As a plugin <span style="color:var(--green);font-weight:500">(recommended)</span></div>
   <div class="sstep">
     <div class="snum" style="background:var(--blue-bg);color:var(--blue)">1</div>
     <div>
-      <div class="stitle">Clone and install</div>
-      <div class="sdesc">Clone to a temp location, run the installer from your project root. It copies 3 files to root and everything else into <code>.claude/</code>. Never touches your existing files.</div>
-      <div class="scode">git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/claude-framework
-cd your-project
-bash /tmp/claude-framework/install.sh
-rm -rf /tmp/claude-framework</div>
-      <div style="font-size:12px;color:var(--ink-3);margin-top:6px">The installer backs up existing <code>.claude/</code> config, detects your test runner, and offers the GitHub Actions PR review as an opt-in.</div>
+      <div class="stitle">Add the marketplace and install</div>
+      <div class="sdesc">Requires Claude Code v2.1 or later. The plugin's components live in Claude Code's plugin cache — nothing is copied into your repo yet.</div>
+      <div class="scode">/plugin marketplace add matias-gentile/claude-code-framework
+/plugin install agent-first-framework@claude-code-framework</div>
     </div>
   </div>
   <div class="sstep">
     <div class="snum" style="background:var(--green-bg);color:var(--green)">2</div>
     <div>
-      <div class="stitle">Open Claude Code and run /project:setup</div>
-      <div class="sdesc">Claude scans your codebase — reads your package.json or equivalent, source files, test files — fills every placeholder automatically and enriches CLAUDE.md with 2–5 project-specific rules.</div>
+      <div class="stitle">Run setup — required</div>
+      <div class="sdesc">In plugin mode this step is mandatory. It creates CLAUDE.md (the framework's rules and 4-phase flow) from a template, then enriches it with your project's conventions. Without it you have the tools but not the rules. Commands are namespaced with the plugin name.</div>
+      <div class="scode">claude
+/agent-first-framework:setup</div>
+    </div>
+  </div>
+
+  <div class="label" style="margin-top:2rem">Option B — Copied into one project</div>
+  <div class="sstep">
+    <div class="snum" style="background:var(--blue-bg);color:var(--blue)">1</div>
+    <div>
+      <div class="stitle">Clone and run the installer</div>
+      <div class="sdesc">Copies 3 files to your project root and everything else into <code>.claude/</code>. Never overwrites your existing files; backs up any existing <code>.claude/</code> config; appends to your <code>.gitignore</code>; detects your test runner.</div>
+      <div class="scode">git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/claude-framework
+cd your-project
+bash /tmp/claude-framework/install.sh
+rm -rf /tmp/claude-framework</div>
+    </div>
+  </div>
+  <div class="sstep">
+    <div class="snum" style="background:var(--green-bg);color:var(--green)">2</div>
+    <div>
+      <div class="stitle">Run setup</div>
+      <div class="sdesc">CLAUDE.md already exists from the installer, so setup enriches it with project-specific rules and configures everything else. Commands use the /project: prefix.</div>
       <div class="scode">claude
 /project:setup</div>
     </div>
   </div>
+
+  <div class="label" style="margin-top:2rem">Then, in either mode</div>
   <div class="sstep">
     <div class="snum" style="background:var(--accent-bg);color:var(--accent)">3</div>
     <div>
-      <div class="stitle">Run /project:tutorial</div>
-      <div class="sdesc">20-minute interactive walkthrough using your real project. Dispatches the planner on a real task, creates a verification flow for your most important feature, records your first ADR.</div>
-      <div class="scode">/project:tutorial</div>
+      <div class="stitle">Tutorial — optional</div>
+      <div class="sdesc">A 20-minute interactive walkthrough using your real project. Skip it if you already know the framework. It teaches; it doesn't configure anything setup didn't already handle.</div>
+      <div class="scode">/agent-first-framework:tutorial    (plugin)
+/project:tutorial                  (copy)</div>
     </div>
   </div>
   <div class="sstep">
     <div class="snum" style="background:var(--paper-3);color:var(--ink-2)">4</div>
     <div>
-      <div class="stitle">Run /project:session-review at the end of each session</div>
-      <div class="sdesc">Before you <code>/clear</code> context, run <code>/project:session-review</code>. It reads what happened, drafts anything worth capturing, and asks for approval. This is what makes the framework compound over time.</div>
-      <div class="scode">/project:session-review
-/clear</div>
+      <div class="stitle">Session-review at the end of each session</div>
+      <div class="sdesc">Before you <code>/clear</code> context, run the session-review command. It reads what happened, drafts rules, ADRs, or new agents worth keeping, and asks for approval. The Stop hook reminds you automatically. This is what makes the framework compound over time.</div>
+      <div class="scode">/agent-first-framework:session-review    (plugin)
+/project:session-review                  (copy)</div>
     </div>
   </div>
+
   <div class="callout">
-    <div class="callout-t">For a brand new project</div>
-    <div class="callout-b">
-      <code>git clone https://github.com/matias-gentile/claude-code-framework.git my-project</code><br>
-      <code>cd my-project && rm -rf .git && git init</code><br><br>
-      Then follow steps 2–4 above.
-    </div>
+    <div class="callout-t">Which should I choose?</div>
+    <div class="callout-b">Use the <strong>plugin</strong> if you want the framework across many projects and easy updates — it's the modern Claude Code distribution method. Use <strong>copy</strong> if you want the framework's files committed directly into one project's repo so the whole team gets them via version control.</div>
   </div>
 </section>
 
