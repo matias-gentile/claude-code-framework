@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
-# Stop hook: fires when Claude finishes a task
-# Prompts the compounding loop via the /session-review command
+# NOTE: This script is no longer executed by the Stop hook.
+# The Stop hook now uses type:prompt to inject a message directly
+# into the Claude Code conversation (see settings.json).
+#
+# This file is kept as reference. You can safely delete it.
+# The prompt in settings.json says:
+#   "Session complete. Before /clear, run /project:session-review..."
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  Session complete."
-echo ""
-echo "  Before you /clear, capture what this session taught:"
-echo "  Run: /session-review"
-echo ""
-echo "  It will draft any rules, ADRs, or skills for you"
-echo "  to approve — no writing from scratch."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "This script is not used — the Stop hook is now a prompt type."
+echo "See .claude/settings.json for the active prompt."

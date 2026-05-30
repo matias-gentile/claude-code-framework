@@ -11,6 +11,7 @@
 - All API calls routed through the gateway service — no direct third-party calls from feature code
 - Modular, decoupled design — no cross-module imports except through defined interfaces
 - Strict type-checking and explicit error handling — no silent catches, no `any`
+- Before implementing any feature, search for an existing implementation of a similar feature and follow its structure
 - See `.claude/adr/` for all recorded architectural decisions — read the relevant ADR before touching that area
 
 ## The 4-Phase Flow (MANDATORY for any task touching >1 file)
@@ -22,7 +23,7 @@
 ## Compounding Loop (IMPORTANT)
 - After every non-trivial task: ask "should this go in CLAUDE.md, a skill, or an ADR?"
 - If a bug or architectural choice surprised you: record it before closing the session
-- Run `/session-review` at end of session — it drafts rules, ADRs, and skills for approval
+- Run `/project:session-review` at end of session — it drafts rules, ADRs, and skills for approval
 - Use `/compact` to summarize context before `/clear`
 
 ## Agent Workforce

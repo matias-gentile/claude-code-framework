@@ -47,6 +47,17 @@ A workflow is worth making a skill if:
 - It will recur in future sessions
 - The instructions are reusable, not task-specific
 
+**Category D — Custom agents**
+A custom agent is worth proposing if:
+- A specific workflow appeared this session that required a distinct role (e.g., DB migrations, API client generation, localization)
+- The workflow needed restricted tool access (read-only, write to specific directories only)
+- It will recur across multiple sessions
+
+NOT worth proposing if:
+- A skill would cover it (skills are cheaper than agents — less context overhead)
+- It's a one-time task that won't recur
+- The existing 4 agents already handle it
+
 ## Step 3 — Draft artifacts
 
 For each candidate identified, draft the actual artifact. Do not ask the human to write it — draft it yourself and ask for approval.
@@ -106,6 +117,28 @@ Approve? [Y/n/edit]
 
 If approved: create the full skill file.
 
+### For custom agents:
+Present as:
+```
+━━ PROPOSED NEW AGENT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+File: .claude/agents/[name].md
+
+name: [agent-name]
+description: [when to dispatch this agent]
+tools: [only the tools it needs — least privilege]
+model: claude-sonnet-4-20250514
+isolation: worktree
+
+Role summary:
+[2-3 sentences describing what the agent does and what it cannot do]
+
+Approve? [Y/n/edit]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+If approved: create the full agent file with output contract, turn contract, and escape hatch.
+Add a reference to CLAUDE.md and AGENTS.md under Agent Workforce.
+
 ## Step 4 — Update session notes
 
 After processing all candidates, update `.claude/session-notes.md`:
@@ -121,6 +154,7 @@ Captured:
   [N] rules added to CLAUDE.md
   [N] ADRs recorded in .claude/adr/
   [N] skills created in .claude/skills/
+  [N] agents created in .claude/agents/
 
 Skipped:
   [N] candidates rejected or not found

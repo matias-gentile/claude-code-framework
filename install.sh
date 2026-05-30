@@ -122,6 +122,21 @@ fi
 COMPLETED+=("Existing config checked")
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PRE-CHECK — Claude Code version
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+if command -v claude &>/dev/null; then
+  CLAUDE_VER=$(claude --version 2>/dev/null | head -1 || echo "unknown")
+  print_ok "Claude Code installed: ${CYAN}$CLAUDE_VER${RESET}"
+else
+  print_warn "Claude Code CLI not found in PATH"
+  echo -e "  Install: ${CYAN}npm install -g @anthropic-ai/claude-code${RESET}"
+  ISSUES+=("Claude Code CLI not installed")
+fi
+echo -e "  ${DIM}Slash commands require Claude Code v2.1.101+${RESET}"
+echo -e "  ${DIM}Commands are invoked as /project:command-name${RESET}"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # STEP 2 — Copy framework files
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 print_header "Step 2 of 5 — Installing framework files"
@@ -169,6 +184,7 @@ GITIGNORE_ENTRIES=(
   "# Claude Code framework"
   ".mcp.json"
   ".claude/session-notes.md"
+  ".claude/worktrees/"
 )
 
 if [ -f "$TARGET_DIR/.gitignore" ]; then
@@ -322,10 +338,10 @@ echo -e "  ${BOLD}2. Open Claude Code in your project:${RESET}"
 echo -e "     ${CYAN}claude${RESET}"
 echo ""
 echo -e "  ${BOLD}3. Let Claude scan your codebase and fill in placeholders:${RESET}"
-echo -e "     ${CYAN}Run the setup skill${RESET}"
+echo -e "     ${CYAN}/project:setup${RESET}"
 echo ""
 echo -e "  ${BOLD}4. Run the interactive tutorial (20 min):${RESET}"
-echo -e "     ${CYAN}Run the tutorial skill${RESET}"
+echo -e "     ${CYAN}/project:tutorial${RESET}"
 echo ""
 echo -e "  ${DIM}Full docs: .claude/docs/README.md${RESET}"
 echo -e "  ${DIM}Interactive guide: open .claude/docs/guide.html in a browser${RESET}"

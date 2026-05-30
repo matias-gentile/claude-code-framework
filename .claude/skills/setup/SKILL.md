@@ -127,12 +127,84 @@ Bad rule: "Handle errors properly" (not actionable)
 
 Add only rules that pass all four. Aim for 2-5 new rules. Quality beats quantity.
 
-## Step 7 — Report what you did
+## Step 7 — Configure MCP integrations
+
+Read `.mcp.json` and check which servers are still unconfigured (have `<YOUR_` placeholders).
+
+For each unconfigured server, determine if it's relevant to this project:
+
+**GitHub MCP** — relevant if:
+- The project is a git repository (`git remote -v` returns a GitHub URL)
+- If relevant: ask the user for their GitHub personal access token
+  - Explain: "I need a GitHub token to read PRs, issues, and repo context directly."
+  - Explain: "Create one at https://github.com/settings/tokens (needs 'repo' scope)"
+  - Once provided: write it to `.mcp.json` under `github.headers.Authorization`
+
+**Context7 MCP** — relevant if:
+- The project uses any external libraries (check package.json, requirements.txt, etc.)
+- If relevant: no token needed. Just verify the npx command works:
+  `npx -y @upstash/context7-mcp --help 2>/dev/null`
+  - If it works: mark as configured in `.mcp.json`
+  - If it fails: note it needs Node.js/npx installed
+
+**Database MCP** — relevant if:
+- The project has a database connection string anywhere (.env.example, docker-compose.yml, config files)
+- If relevant: ask the user for their local/dev database connection string
+  - Explain: "This gives Claude read-only access to query your database for debugging."
+  - Emphasize: "This is stored locally in .mcp.json which is gitignored — it will never be committed."
+  - Once provided: write it to `.mcp.json`
+
+**Custom API MCP** — skip unless the user mentions a specific service they want to connect.
+
+Remove any server blocks from `.mcp.json` that are not relevant to this project
+(delete the entire block, don't leave unconfigured placeholders).
+
+If the user declines to configure any server: remove that block from `.mcp.json` and note it in the report.
+
+## Step 8 — Initialize session notes
+
+Create `.claude/session-notes.md` with a starter template so the session-notes skill
+and `/project:session-review` have a file to work with from the first session:
+
+```markdown
+# Session Notes
+
+## Current Task
+(No task in progress — run /project:setup to complete initial configuration)
+
+## Progress Log
+| # | Step | Status | Notes |
+|---|------|--------|-------|
+
+## Decisions Made
+| Decision | Rationale | ADR? |
+|----------|-----------|------|
+
+## Open Questions
+- [ ] Complete /project:tutorial for hands-on walkthrough
+
+## Files Changed
+- (none yet)
+
+## Test Results
+- (none yet)
+```
+
+## Step 9 — Report what you did
 
 Output a summary in this format:
 
 ```
 ## Framework Setup Complete
+
+### CLAUDE.md enriched (this is your /init)
+The framework scanned your codebase and added project-specific rules.
+These rules will be followed automatically in every future session.
+
+Rules added:
+- [list each rule that was added to CLAUDE.md]
+
+CLAUDE.md is now [X] lines (budget: 120).
 
 ### Stack detected
 - Language: ...
@@ -146,6 +218,11 @@ Output a summary in this format:
 - ✅ .claude/hooks/.test-command
 - ✅ .claude/skills/verification/SKILL.md (added [N] verification flows)
 - ✅ CLAUDE.md (added [N] project-specific rules)
+
+### MCP integrations
+- [GitHub: configured / skipped / not relevant]
+- [Context7: configured / skipped / not relevant]
+- [Database: configured / skipped / not relevant]
 
 ### Could not detect (fill in manually)
 - ⚠️ [anything you couldn't determine from the code]

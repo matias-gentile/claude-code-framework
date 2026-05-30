@@ -158,6 +158,50 @@ Before committing any framework change:
 
 ---
 
+## Per-module rules (nested CLAUDE.md)
+
+Claude Code supports nested CLAUDE.md files. If you create `src/billing/CLAUDE.md`, its rules apply only when Claude is working on files inside `src/billing/`.
+
+**When to use nested CLAUDE.md files:**
+- Monorepos where modules have genuinely different conventions
+- A module uses a different DB access pattern, error handling, or naming convention than the rest
+- A module has strict rules that don't apply globally (e.g., "all prices in cents, never floats")
+
+**When NOT to use them:**
+- Single-service repos where the same rules apply everywhere — just use root CLAUDE.md
+- To repeat rules from root CLAUDE.md — nested files add to root rules, they don't replace them
+
+**How to create one:**
+```bash
+echo "# Billing Module Rules" > src/billing/CLAUDE.md
+echo "- All monetary amounts are integers in cents — never floats, never dollars" >> src/billing/CLAUDE.md
+```
+
+These rules load automatically when Claude touches files in that directory.
+
+---
+
+## Worktree folders (.claude/worktrees/)
+
+When agents run with `isolation: worktree` (all agents in this framework do), Claude Code creates temporary working directories at `.claude/worktrees/agent-xxxx/`. Each agent gets its own copy of the codebase so agents can't interfere with each other.
+
+**What they are:** ephemeral scratch directories. They contain the agent's work-in-progress during execution.
+
+**Why they appear in VS Code:** VS Code's Source Control panel detects them as git worktrees and shows uncommitted changes. This is confusing but harmless — those changes are either already merged to your main branch (if the agent succeeded) or should be discarded (if it failed).
+
+**How to clean up:**
+```bash
+rm -rf .claude/worktrees/
+```
+This is always safe. Claude Code creates fresh worktrees on each agent dispatch.
+
+**Why they don't get committed:** the install.sh adds `.claude/worktrees/` to your `.gitignore`. If you installed the framework before this entry was added, add it manually:
+```bash
+echo ".claude/worktrees/" >> .gitignore
+```
+
+---
+
 ## The compounding rule for framework changes
 
 Every time you improve the framework, write one sentence in the commit message explaining *why* you made the change, not just *what* you changed.
