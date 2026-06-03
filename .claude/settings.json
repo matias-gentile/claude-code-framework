@@ -41,14 +41,20 @@
     "SessionStart": [
       {
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/session-start.sh" }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-start.sh"
+          }
         ]
       }
     ],
     "UserPromptSubmit": [
       {
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/user-prompt-submit.sh" }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/user-prompt-submit.sh"
+          }
         ]
       }
     ],
@@ -56,7 +62,10 @@
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/post-edit-test.sh" }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-edit-test.sh"
+          }
         ]
       }
     ],
@@ -64,21 +73,30 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/pre-commit-check.sh" }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-commit-check.sh"
+          }
         ]
       }
     ],
     "PreCompact": [
       {
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/pre-compact.sh" }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-compact.sh"
+          }
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          { "type": "prompt", "prompt": "Session complete. Before /clear, run /project:session-review to capture any lessons from this session as permanent rules, ADRs, or skills. It drafts them for you — you just approve or reject." }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-stop-notice.sh"
+          }
         ]
       }
     ]

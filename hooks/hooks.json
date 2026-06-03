@@ -56,8 +56,8 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Session complete. Before /clear, run /agent-first-framework:session-review to capture any lessons from this session as permanent rules, ADRs, or skills. It drafts them for you — you just approve or reject."
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-stop-notice.sh"
           }
         ]
       }
