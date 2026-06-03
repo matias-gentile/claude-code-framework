@@ -171,6 +171,17 @@ else
   ISSUES+=("settings.json not updated — merge hooks config manually")
 fi
 
+
+# Record framework version + manifest so update.sh has a baseline
+if [ -f "$SOURCE_DIR/.claude-plugin/plugin.json" ]; then
+  VER=$(python3 -c "import json;print(json.load(open('$SOURCE_DIR/.claude-plugin/plugin.json'))['version'])" 2>/dev/null || echo "unknown")
+  echo "$VER" > "$TARGET_DIR/.claude/.framework-version"
+  print_ok "Recorded framework version: $VER"
+fi
+if [ -f "$SOURCE_DIR/.claude-plugin/manifest.txt" ]; then
+  cp "$SOURCE_DIR/.claude-plugin/manifest.txt" "$TARGET_DIR/.claude/.framework-manifest"
+fi
+
 COMPLETED+=("Framework files installed")
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -34,6 +34,31 @@ rm -rf /tmp/claude-framework
 
 This copies the framework into your project's `.claude/` directory. Commands are namespaced as `/project:setup`, etc.
 
+## Updating an installed project
+
+When the framework ships improvements, pull them in without losing your work.
+
+**Plugin mode:**
+```bash
+/plugin marketplace update claude-code-framework
+/plugin uninstall agent-first-framework
+/plugin install agent-first-framework@claude-code-framework
+```
+
+**Copy mode:** run the updater, or just `/project:update` and let Claude guide you.
+```bash
+git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/cf
+cd your-project
+bash /tmp/cf/update.sh
+rm -rf /tmp/cf
+```
+
+The updater compares each component against what was originally shipped. Files you
+have not modified are updated in place. Files you customized are left untouched, with
+the new version saved beside them as `<file>.new` to compare. Your `CLAUDE.md`,
+`AGENTS.md`, `.mcp.json`, and `session-notes.md` are never touched. See `CHANGELOG.md`
+for what each version changes.
+
 ## After install
 
 ```bash
