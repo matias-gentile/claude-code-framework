@@ -59,6 +59,16 @@ the new version saved beside them as `<file>.new` to compare. Your `CLAUDE.md`,
 `AGENTS.md`, `.mcp.json`, and `session-notes.md` are never touched. See `CHANGELOG.md`
 for what each version changes.
 
+## Already have your own Claude Code setup?
+
+The framework coexists with it — nothing of yours is destroyed. Components with unique
+names live alongside the framework's. Name collisions (e.g. your own `agents/planner.md`)
+never overwrite your file; the framework version is saved as `<name>.framework` for you
+to review. Your `settings.json` is merged (your permissions and hooks preserved, the
+framework's added only where missing; original backed up as `settings.json.pre-framework`).
+Your existing `CLAUDE.md` / `AGENTS.md` are reconciled with your consent — setup appends
+the framework sections you're missing without rewriting your content.
+
 ## After install
 
 ```bash

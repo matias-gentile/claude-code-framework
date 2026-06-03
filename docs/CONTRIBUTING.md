@@ -148,13 +148,32 @@ When adding a new MCP integration:
 
 Before committing any framework change:
 
+**Always:**
 - [ ] CLAUDE.md is still under 120 lines
 - [ ] New skills have accurate `description` frontmatter (test by triggering them)
 - [ ] New agents have `isolation: worktree` and least-privilege `tools`
 - [ ] New hooks don't fire on every individual edit
 - [ ] `.mcp.json` is NOT committed (only `.mcp.json.example`)
 - [ ] The change is captured in an ADR if it's a significant framework decision
-- [ ] README.md updated if the directory structure changed
+
+**Documentation sync (the docs lag the code if you skip this):**
+- [ ] **Added/removed a command?** Update the command count in `docs/guide.html`
+      (hero stat) AND the command list in the "Your AI team" tab AND `README.md`.
+- [ ] **Added/removed an agent, skill, or hook?** Update the corresponding count
+      in the `docs/guide.html` hero stats and the relevant tab.
+- [ ] **Added a user-facing feature** (install/update/coexistence behavior)?
+      Update `README.md`, `docs/README.md`, AND `docs/guide.html` — all three.
+- [ ] Directory structure changed? Update the tree in `docs/README.md`.
+
+**Release bookkeeping:**
+- [ ] Bump `version` in `.claude-plugin/plugin.json` (semver).
+- [ ] Add a `CHANGELOG.md` entry under the new version.
+- [ ] If components changed, regenerate the manifest:
+      `bash .claude-plugin/generate-manifest.sh`
+
+> Rule of thumb: a change isn't done when the code works — it's done when the
+> three user-facing docs (README, docs/README, guide.html) describe what the
+> code now does. Counts and command lists are the first things to drift.
 
 ---
 

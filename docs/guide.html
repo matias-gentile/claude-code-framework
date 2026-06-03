@@ -169,7 +169,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <div class="stats">
     <div><div class="stat-n">4</div><div class="stat-l">Specialist agents</div></div>
     <div><div class="stat-n">8</div><div class="stat-l">Knowledge skills</div></div>
-    <div><div class="stat-n">6</div><div class="stat-l">Slash commands</div></div>
+    <div><div class="stat-n">7</div><div class="stat-l">Slash commands</div></div>
     <div><div class="stat-n">6</div><div class="stat-l">Lifecycle hooks</div></div>
   </div>
 </header>
@@ -303,6 +303,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
     <div class="cmdrow"><div class="cmdname">review</div><div class="cmddesc">Dispatch the code-reviewer agent on current changes before any merge or pull request.</div></div>
     <div class="cmdrow"><div class="cmdname">adr</div><div class="cmddesc">Record an architectural decision into a permanent file in <code>.claude/adr/</code>.</div></div>
     <div class="cmdrow"><div class="cmdname">session-review</div><div class="cmddesc">Draft lessons from this session — rules, ADRs, skills — for your approval. Run before <code>/clear</code>. This is what makes the framework compound.</div></div>
+    <div class="cmdrow"><div class="cmdname">update</div><div class="cmddesc">Pull the latest framework improvements into this project. Updates components you haven't touched, preserves your customizations, and never alters your CLAUDE.md.</div></div>
   </div>
 </section>
 
@@ -450,6 +451,15 @@ rm -rf /tmp/claude-framework</div>
     <div class="callout-t">Which should I choose?</div>
     <div class="callout-b">Use the <strong>plugin</strong> if you want the framework across many projects and easy updates — it's the modern Claude Code distribution method. Use <strong>copy</strong> if you want the framework's files committed directly into one project's repo so the whole team gets them via version control.</div>
   </div>
+
+  <div class="label" style="margin-top:2rem">Updating later</div>
+  <p class="body">When the framework ships improvements, pull them in without losing your work. In copy mode, run the <code>update</code> command or the updater script; in plugin mode, reinstall the plugin. The updater refreshes components you haven't modified, leaves anything you customized untouched (saving the new version beside it as <code>.new</code> to compare), and never alters your CLAUDE.md, settings, or notes.</p>
+  <div class="scode">git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/cf
+bash /tmp/cf/update.sh
+rm -rf /tmp/cf</div>
+
+  <div class="label" style="margin-top:1.5rem">Already have your own Claude Code setup?</div>
+  <p class="body">The framework is built to coexist. If you already have your own agents, skills, commands, hooks, or settings, none of it is destroyed. Your files with unique names live alongside the framework's. If a component collides by name (say you have your own <code>planner</code>), your version is kept and the framework's is saved as <code>.framework</code> for you to compare. Your <code>settings.json</code> is merged — your permissions and hooks are preserved, the framework's are added only where missing. And your existing <code>CLAUDE.md</code> is reconciled with your consent: setup appends the framework sections it's missing without touching your content.</p>
 </section>
 
 <footer class="footer">

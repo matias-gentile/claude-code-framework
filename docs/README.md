@@ -54,9 +54,42 @@ git init && git add . && git commit -m "chore: init with agent-first framework"
 
 ```bash
 claude                     # open Claude Code in your project
-Run the setup skill        # Claude scans your code and fills in all placeholders
-Run the tutorial skill     # 20-min interactive walkthrough with your real code
+/project:setup             # Claude scans your code and fills in all placeholders
+/project:tutorial          # 20-min interactive walkthrough with your real code
 ```
+(In plugin mode the commands are `/agent-first-framework:setup`, etc.)
+
+## Updating an installed project
+
+When the framework ships improvements, pull them in without losing your work.
+
+**Copy mode** — run `/project:update` and Claude guides you, or run the updater directly:
+
+```bash
+git clone https://github.com/matias-gentile/claude-code-framework.git /tmp/cf
+cd your-project
+bash /tmp/cf/update.sh
+rm -rf /tmp/cf
+```
+
+**Plugin mode** — reinstall the plugin:
+
+```bash
+/plugin marketplace update claude-code-framework
+/plugin uninstall agent-first-framework
+/plugin install agent-first-framework@claude-code-framework
+```
+
+The updater compares each component against what was originally shipped (using a manifest of hashes recorded at install). Components you have **not** modified are updated in place. Components you **have** customized are left untouched, with the new version saved beside them as `<file>.new` to compare. Your `CLAUDE.md`, `AGENTS.md`, `.mcp.json`, and `session-notes.md` are never touched. See `CHANGELOG.md` for what each version changes.
+
+## Coexisting with your own setup
+
+The framework is built to drop into a project that already has its own Claude Code configuration without destroying any of it:
+
+- **Components with unique names** (your own agents, skills, commands) live alongside the framework's.
+- **Name collisions** (e.g. you already have your own `agents/planner.md`) never overwrite your file — the framework version is saved as `<name>.framework` and flagged for you to review.
+- **Your `settings.json` is merged**, not replaced: your permissions and hooks are preserved, and the framework's hooks/permissions are added only where missing. Your original is backed up as `settings.json.pre-framework`. The merge tolerates JSONC (comments and trailing commas) and is idempotent.
+- **Your existing `CLAUDE.md` / `AGENTS.md` are reconciled with your consent**: setup appends the framework sections you're missing (4-phase flow, escape hatches, etc.) without rewriting or reordering your content.
 
 ## What gets installed in your project
 
