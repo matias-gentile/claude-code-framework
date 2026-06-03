@@ -138,6 +138,15 @@ if [ "$MODIFIED" -gt 0 ]; then
   info "Review each with:  diff <file> <file>.new"
   info "Keep yours: rm <file>.new   |   Take new: mv <file>.new <file>"
 fi
+# ── Remind about any unresolved collision artifacts from install ──
+PENDING=$(find "$TARGET_DIR/.claude" -name "*.framework" 2>/dev/null | wc -l | tr -d ' ')
+if [ "$PENDING" != "0" ]; then
+  echo ""
+  warn "$PENDING unresolved collision file(s) from a previous install (*.framework)"
+  info "These are framework versions saved beside your customized components."
+  info "Review with: find .claude -name '*.framework'"
+fi
+
 echo ""
 echo -e "  Now at version ${BOLD}${NEW_VER}${RESET}."
 echo -e "  ${DIM}Your CLAUDE.md, AGENTS.md, .mcp.json, and session-notes were not touched.${RESET}"

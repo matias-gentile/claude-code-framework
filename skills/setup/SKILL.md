@@ -88,13 +88,27 @@ Generic flows ("check the page loads") are useless. Specific flows ("status 201 
 
 Aim for at least 3 flows. A project with fewer than 3 verification flows is under-instrumented.
 
-### Create or update: `CLAUDE.md`
+### Create or reconcile: `CLAUDE.md`
 
-**First, check if CLAUDE.md exists in the project root.**
+**First, check if CLAUDE.md exists, and if so, whether it's a framework file.**
 
-If it does NOT exist (this happens when the framework was installed as a plugin rather than copied in), create it from the base template below before enriching. The base template is the framework's constitution — without it, none of the rules, the 4-phase flow, or the escape hatches are active.
+Determine which of three cases you're in:
 
-Base CLAUDE.md template to write if missing:
+- **Case A — No CLAUDE.md exists.** (Typical in plugin mode.) Create it from the base template below, then enrich.
+- **Case B — A framework CLAUDE.md exists.** It contains the framework sections (look for "The 4-Phase Flow" and "Escape Hatches"). Just enrich it — add project-specific rules under the existing Architectural Rules section.
+- **Case C — A NON-framework CLAUDE.md exists.** The user had their own CLAUDE.md before installing (it lacks the framework sections). DO NOT overwrite it and DO NOT assume it has an "Architectural Rules" section. Instead, RECONCILE:
+  1. Read their existing CLAUDE.md in full and understand its structure.
+  2. Identify which framework sections are MISSING: The 4-Phase Flow, Compounding Loop, Agent Workforce, Escape Hatches, Active Skills, Token & Cache Discipline.
+  3. Show the user a summary: "Your CLAUDE.md is missing these framework capabilities: [list]. I'd like to append them as new sections, leaving all your existing content untouched. OK?"
+  4. On approval, APPEND the missing sections at the end of their file (never reorder or rewrite their content). If they already have a section covering the same ground (e.g. their own escape-hatch rules), point it out and ask whether to merge or skip that one — do not duplicate.
+  5. For project-specific rules you extract from the scan: if their file has a rules/conventions section, add there; otherwise create a new "## Architectural Rules (from framework setup)" section so it's clearly attributed and easy to find.
+
+In all three cases, keep the file under the 120-line budget. If reconciliation would blow the budget, tell the user and propose which rules to prioritize.
+
+---
+
+Base CLAUDE.md template to write if missing (Case A):
+
 
 ```markdown
 # Project Context
@@ -160,7 +174,10 @@ Base CLAUDE.md template to write if missing:
 - If placeholders are unconfigured: tell me and I will walk you through setup interactively
 ```
 
-Also copy `AGENTS.md` (same content, for non-Claude tools) into the project root if it doesn't exist.
+**AGENTS.md** (the universal-format mirror for non-Claude tools) follows the same three cases as CLAUDE.md:
+- If no AGENTS.md exists → create it from the template (same content as CLAUDE.md but without the `@` file-reference prefixes, plus a Key Contacts section).
+- If a framework AGENTS.md exists → enrich it the same way as CLAUDE.md.
+- If the user has their OWN AGENTS.md (no framework sections) → reconcile with consent exactly as described for CLAUDE.md above: append the missing framework sections, never overwrite their content, ask before merging anything that overlaps.
 
 **Then**, do a deliberate scan to extract project-specific rules. Work through each category below and add only rules that pass the filter.
 

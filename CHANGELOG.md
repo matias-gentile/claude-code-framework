@@ -4,6 +4,26 @@ All notable changes to the Agent-First Engineering Framework are documented here
 The format is based on [Keep a Changelog](https://keepachangelog.com), and this
 project adheres to [Semantic Versioning](https://semver.org).
 
+## [1.2.0] — 2026-05-30
+
+### Added
+- **Coexistence mode** for users who already have their own Claude Code setup:
+  - install.sh now detects component name collisions (e.g. you have your own
+    `agents/planner.md`). Your file is never overwritten — the framework version
+    is saved beside it as `<name>.framework` and flagged for review.
+  - install.sh now MERGES the framework's hooks and permissions into your
+    existing `settings.json` instead of refusing to touch it. Your permissions
+    and hooks are preserved; the framework's are added only where missing.
+    Idempotent, and your original is backed up as `settings.json.pre-framework`.
+  - The setup command now reconciles a pre-existing CLAUDE.md: if it's your own
+    (not a framework file), setup appends the missing framework sections with
+    your consent instead of assuming an "Architectural Rules" section exists.
+- `.claude-plugin/merge-settings.py` — the settings merger (preserves user
+  config, adds framework entries, deduplicates).
+
+### Changed
+- Component install is now collision-aware (per-file, never blind `cp -r`).
+
 ## [1.1.0] — 2026-05-30
 
 ### Added

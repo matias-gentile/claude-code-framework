@@ -153,22 +153,60 @@ for f in CLAUDE.md AGENTS.md .mcp.json.example; do
 done
 
 # .claude/ directory (merge, don't destroy)
-# Source dirs are at plugin root; they install into the target's .claude/
+# Collision-aware: never overwrite a file the user already has. If a framework
+# component collides with an existing file, install it as <name>.framework and
+# flag it so the user can reconcile — their version is never silently replaced.
+COLLISIONS=0
 for subdir in agents skills hooks adr docs commands; do
   if [ -d "$SOURCE_DIR/$subdir" ]; then
-    mkdir -p "$TARGET_DIR/.claude/$subdir"
-    cp -r "$SOURCE_DIR/$subdir/." "$TARGET_DIR/.claude/$subdir/"
+    while IFS= read -r src; do
+      rel="${src#$SOURCE_DIR/}"
+      dst="$TARGET_DIR/.claude/$rel"
+      mkdir -p "$(dirname "$dst")"
+      if [ -f "$dst" ]; then
+        # Compare — if identical, nothing to do; if different, it's a collision
+        if ! cmp -s "$src" "$dst"; then
+          cp "$src" "$dst.framework"
+          [ "${src##*.}" = "sh" ] && chmod +x "$dst.framework" 2>/dev/null || true
+          print_warn "collision: .claude/$rel exists — framework version saved as $rel.framework"
+          ISSUES+=("$rel collided with your file — review $rel.framework")
+          COLLISIONS=$((COLLISIONS+1))
+        fi
+      else
+        cp "$src" "$dst"
+        [ "${src##*.}" = "sh" ] && chmod +x "$dst" 2>/dev/null || true
+      fi
+    done < <(find "$SOURCE_DIR/$subdir" -type f 2>/dev/null)
     print_ok ".claude/$subdir/"
   fi
 done
+if [ "$COLLISIONS" -gt 0 ]; then
+  print_info "$COLLISIONS component name collision(s) — your files kept, framework versions saved as *.framework"
+fi
 
-# settings.json — only if it doesn't exist or is from a previous framework install
-if [ ! -f "$TARGET_DIR/.claude/settings.json" ] || grep -q "post-edit-test" "$TARGET_DIR/.claude/settings.json" 2>/dev/null; then
+# settings.json — merge intelligently so the user's config is preserved
+if [ ! -f "$TARGET_DIR/.claude/settings.json" ]; then
   cp "$SOURCE_DIR/.claude/settings.json" "$TARGET_DIR/.claude/settings.json"
   print_ok ".claude/settings.json"
+elif grep -q "post-edit-test" "$TARGET_DIR/.claude/settings.json" 2>/dev/null; then
+  # Previous framework install — safe to refresh
+  cp "$SOURCE_DIR/.claude/settings.json" "$TARGET_DIR/.claude/settings.json"
+  print_ok ".claude/settings.json (refreshed)"
 else
-  print_warn ".claude/settings.json exists with custom config — not overwriting"
-  ISSUES+=("settings.json not updated — merge hooks config manually")
+  # User has their own settings.json — MERGE framework hooks/permissions in,
+  # preserving everything they already have. This is what activates the
+  # framework's hooks without clobbering the user's config.
+  if command -v python3 &>/dev/null && [ -f "$SOURCE_DIR/.claude-plugin/merge-settings.py" ]; then
+    cp "$TARGET_DIR/.claude/settings.json" "$TARGET_DIR/.claude/settings.json.pre-framework"
+    MERGE_OUT=$(python3 "$SOURCE_DIR/.claude-plugin/merge-settings.py" \
+      "$TARGET_DIR/.claude/settings.json" \
+      "$SOURCE_DIR/.claude/settings.json" 2>&1)
+    print_ok ".claude/settings.json (merged — backup at settings.json.pre-framework)"
+    echo "$MERGE_OUT" | sed 's/^/      /'
+  else
+    print_warn ".claude/settings.json exists — python3 unavailable, cannot auto-merge"
+    ISSUES+=("settings.json: merge framework hooks manually (see .claude/settings.json in the repo)")
+  fi
 fi
 
 
@@ -196,6 +234,8 @@ GITIGNORE_ENTRIES=(
   ".mcp.json"
   ".claude/session-notes.md"
   ".claude/worktrees/"
+  ".claude/settings.json.pre-framework"
+  "*.framework"
 )
 
 if [ -f "$TARGET_DIR/.gitignore" ]; then

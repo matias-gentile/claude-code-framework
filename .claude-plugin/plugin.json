@@ -1,6 +1,6 @@
 {
   "name": "agent-first-framework",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A production-grade engineering harness for Claude Code: 4 specialist agents, 8 skills, automatic quality gates, a compounding loop that turns every session's lessons into permanent rules, and the 4-phase Explore-Plan-Implement-Verify flow.",
   "author": {
     "name": "matias-gentile"
