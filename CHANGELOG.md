@@ -4,6 +4,15 @@ All notable changes to the Agent-First Engineering Framework are documented here
 The format is based on [Keep a Changelog](https://keepachangelog.com), and this
 project adheres to [Semantic Versioning](https://semver.org).
 
+## [1.4.0] — 2026-05-30
+
+### Added
+- **Opt-in context-aware status line.** Setup now offers a status line showing model,
+  branch, and context-usage % (green/yellow/red by threshold) — the visual companion to
+  the framework's token-discipline goal, so you compact before being surprised by it.
+  Opt-in by design: setup checks for `jq`, never overwrites an existing `statusLine`,
+  and asks before configuring. Not enabled by default and not forced by install.sh.
+
 ## [1.3.0] — 2026-05-30
 
 ### Added

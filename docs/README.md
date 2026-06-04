@@ -150,6 +150,10 @@ Every session makes the next one faster:
 - Workflow that takes many turns → create a new skill
 - Architectural decision → record an ADR in `.claude/adr/`
 
+## Status line (opt-in)
+
+During setup, the framework offers a context-aware status line showing model, branch, and context-window usage % (color-coded). It's the visual side of the token discipline the framework promotes — a cue to `/compact` before hitting the limit. Setup asks before enabling it, requires `jq`, and never overwrites a `statusLine` you already have. Remove it anytime with `/statusline clear` or by deleting the `statusLine` field from `.claude/settings.json`.
+
 ## MCP setup
 
 `.mcp.json` is gitignored. The installer creates it from `.mcp.json.example`. To configure:

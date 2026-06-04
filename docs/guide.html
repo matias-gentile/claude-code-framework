@@ -459,6 +459,9 @@ rm -rf /tmp/claude-framework</div>
 bash /tmp/cf/update.sh
 rm -rf /tmp/cf</div>
 
+  <div class="label" style="margin-top:1.5rem">Optional: context-usage status line</div>
+  <p class="body">During setup, the framework offers an opt-in status line showing the model, branch, and how much of the context window is used (green → yellow → red). It's the visual companion to the framework's token discipline — you see when to <code>/compact</code> instead of being surprised by compaction. It's never enabled without asking, requires <code>jq</code>, and never replaces a status line you already have.</p>
+
   <div class="label" style="margin-top:1.5rem">Already have your own Claude Code setup?</div>
   <p class="body">The framework is built to coexist. If you already have your own agents, skills, commands, hooks, or settings, none of it is destroyed. Your files with unique names live alongside the framework's. If a component collides by name (say you have your own <code>planner</code>), your version is kept and the framework's is saved as <code>.framework</code> for you to compare. Your <code>settings.json</code> is merged — your permissions and hooks are preserved, the framework's are added only where missing. And your existing <code>CLAUDE.md</code> is reconciled with your consent: setup appends the framework sections it's missing without touching your content.</p>
 </section>

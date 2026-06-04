@@ -250,7 +250,49 @@ Remove any server blocks from `.mcp.json` that are not relevant to this project
 
 If the user declines to configure any server: remove that block from `.mcp.json` and note it in the report.
 
-## Step 8 — Initialize session notes
+## Step 8 — Offer a context-aware status line (opt-in)
+
+The framework promotes token discipline (the 120-line budget, `/compact` before `/clear`).
+A status line showing context usage makes that discipline visible — you see when you're
+approaching compaction instead of being surprised by it. This is OPT-IN: do not configure
+it without asking, and never overwrite a status line the user already has.
+
+1. **Check for an existing status line.** Read `.claude/settings.json` (and mention `~/.claude/settings.json` if relevant). If a `statusLine` field already exists, DO NOT touch it — tell the user they already have one and skip this step.
+2. **Check for `jq`.** Run `command -v jq`. The script needs it to parse the JSON Claude Code provides. If `jq` is not installed, tell the user the status line needs `jq` and skip (don't write a script that will render garbage).
+3. **Ask.** "Want a status line showing model, branch, and context-usage %? It helps you compact before hitting the limit. [y/N]"
+4. **On approval**, write `.claude/statusline.sh` with this content:
+
+```bash
+#!/usr/bin/env bash
+# Framework status line: model · branch · context-usage %
+# Context % turns yellow past 50, red past 75 — your cue to /compact.
+input=$(cat)
+if command -v jq >/dev/null 2>&1; then
+  MODEL=$(echo "$input" | jq -r '.model.display_name // "?"')
+  PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
+else
+  MODEL="?"; PCT=0
+fi
+BRANCH=$(git branch --show-current 2>/dev/null || echo "-")
+# Color the context % by threshold
+if [ "$PCT" -ge 75 ]; then C=$'\033[31m'      # red
+elif [ "$PCT" -ge 50 ]; then C=$'\033[33m'     # yellow
+else C=$'\033[32m'; fi                          # green
+R=$'\033[0m'; DIM=$'\033[2m'
+printf '%s %s⎇ %s%s %sctx %s%%%s' "$MODEL" "$DIM" "$BRANCH" "$R" "$C" "$PCT" "$R"
+```
+
+Then `chmod +x .claude/statusline.sh` and add the `statusLine` field to `.claude/settings.json`:
+```json
+"statusLine": { "type": "command", "command": "bash .claude/statusline.sh", "padding": 0 }
+```
+Use the merge approach — add the field without disturbing existing settings. Note that
+`context_window.used_percentage` is null before the first API call and right after
+`/compact`; the `// 0` fallback handles that so it shows `ctx 0%` rather than breaking.
+
+5. If the user declines: skip silently, note "status line: declined" in the report.
+
+## Step 9 — Initialize session notes
 
 Create `.claude/session-notes.md` with a starter template so the session-notes skill
 and `the session-review command` have a file to work with from the first session:
@@ -279,7 +321,7 @@ and `the session-review command` have a file to work with from the first session
 - (none yet)
 ```
 
-## Step 9 — Report what you did
+## Step 10 — Report what you did
 
 Output a summary in this format:
 
