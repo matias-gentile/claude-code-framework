@@ -52,6 +52,7 @@
 - `adr-recorder` — capture architectural decisions; invoke after any significant choice
 - `runbook` — structured debugging; invoke when something is broken or investigation exceeds 15 min
 - `session-notes` — structured record-keeping during work; summaries come from notes, not memory
+- `curator` — consolidate/prune notes, ADRs, and stale rules when memory grows heavy; run occasionally
 
 ## Token & Cache Discipline
 - Most stable content is at the TOP of this file — do not reorder sections (cache hit rate depends on it)

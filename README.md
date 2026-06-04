@@ -81,8 +81,8 @@ The setup command scans your codebase, fills in placeholders, enriches CLAUDE.md
 ## What you get
 
 **Agents** (`agents/`): planner, tdd-writer, code-reviewer, quality-gate
-**Skills** (`skills/`): setup, tutorial, verification, tdd-practices, runbook, session-notes, adr-recorder, api-conventions
-**Commands** (`commands/`): setup, tutorial, plan, review, adr, session-review
+**Skills** (`skills/`): setup, tutorial, verification, tdd-practices, runbook, session-notes, adr-recorder, api-conventions, curator
+**Commands** (`commands/`): setup, tutorial, plan, review, adr, session-review, update, curate
 **Hooks** (`hooks/`): SessionStart (loads prior context), UserPromptSubmit (blocks secrets, injects ADRs), PostToolUse (auto-test), PreToolUse (commit gate), PreCompact (preserve notes), Stop (compounding loop)
 
 ## License

@@ -168,8 +168,8 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <p class="hero-sub">A framework that turns Claude Code from a suggestion tool into a structured engineering team — with specialists, quality gates, and a memory that compounds every session.</p>
   <div class="stats">
     <div><div class="stat-n">4</div><div class="stat-l">Specialist agents</div></div>
-    <div><div class="stat-n">8</div><div class="stat-l">Knowledge skills</div></div>
-    <div><div class="stat-n">7</div><div class="stat-l">Slash commands</div></div>
+    <div><div class="stat-n">9</div><div class="stat-l">Knowledge skills</div></div>
+    <div><div class="stat-n">8</div><div class="stat-l">Slash commands</div></div>
     <div><div class="stat-n">6</div><div class="stat-l">Lifecycle hooks</div></div>
   </div>
 </header>
@@ -235,7 +235,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   </div>
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">2</div><div class="lname">Skills — on-demand knowledge</div><div class="ltag">8 skills · loads when relevant</div><i class="ti ti-chevron-down chevron"></i></div>
-    <div class="lbody">Knowledge modules that load only when the topic is relevant — saving memory for actual work. <ul><li><strong>setup</strong> — scans codebase, fills placeholders, enriches CLAUDE.md</li><li><strong>verification</strong> — confirms features work from the user's perspective</li><li><strong>tdd-practices</strong> — test-first enforcement</li><li><strong>runbook</strong> — structured debugging protocol</li><li><strong>session-notes</strong> — writes notes so summaries come from records, not memory</li><li><strong>adr-recorder</strong> — captures architectural decisions permanently</li><li><strong>api-conventions</strong> — REST design rules</li></ul></div>
+    <div class="lbody">Knowledge modules that load only when the topic is relevant — saving memory for actual work. <ul><li><strong>setup</strong> — scans codebase, fills placeholders, enriches CLAUDE.md</li><li><strong>verification</strong> — confirms features work from the user's perspective</li><li><strong>tdd-practices</strong> — test-first enforcement</li><li><strong>runbook</strong> — structured debugging protocol</li><li><strong>session-notes</strong> — writes notes so summaries come from records, not memory</li><li><strong>adr-recorder</strong> — captures architectural decisions permanently</li><li><strong>api-conventions</strong> — REST design rules</li><li><strong>curator</strong> — consolidates notes, marks superseded ADRs, prunes stale rules as the project ages</li></ul></div>
   </div>
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">3</div><div class="lname">Agents — specialist workers</div><div class="ltag">4 agents · isolated execution</div><i class="ti ti-chevron-down chevron"></i></div>
@@ -304,6 +304,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
     <div class="cmdrow"><div class="cmdname">adr</div><div class="cmddesc">Record an architectural decision into a permanent file in <code>.claude/adr/</code>.</div></div>
     <div class="cmdrow"><div class="cmdname">session-review</div><div class="cmddesc">Draft lessons from this session — rules, ADRs, skills — for your approval. Run before <code>/clear</code>. This is what makes the framework compound.</div></div>
     <div class="cmdrow"><div class="cmdname">update</div><div class="cmddesc">Pull the latest framework improvements into this project. Updates components you haven't touched, preserves your customizations, and never alters your CLAUDE.md.</div></div>
+    <div class="cmdrow"><div class="cmdname">curate</div><div class="cmddesc">Keep accumulated memory compact as the project ages: compresses old session notes, marks superseded ADRs, and proposes removal of stale CLAUDE.md rules — each with your approval.</div></div>
   </div>
 </section>
 

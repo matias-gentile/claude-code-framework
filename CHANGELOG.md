@@ -4,6 +4,19 @@ All notable changes to the Agent-First Engineering Framework are documented here
 The format is based on [Keep a Changelog](https://keepachangelog.com), and this
 project adheres to [Semantic Versioning](https://semver.org).
 
+## [1.3.0] — 2026-05-30
+
+### Added
+- **Curator skill + `curate` command** for keeping accumulated memory compact and
+  current as a project ages. Three distinct, safe treatments:
+  - **session-notes**: compresses completed entries into a rolling summary (with approval).
+  - **ADRs**: marks superseded/deprecated status and can build an INDEX — never deletes
+    or merges them, so the record of *why not* is preserved.
+  - **CLAUDE.md**: proposes removal of rules with concrete evidence of being stale
+    (dead file refs, old versions, contradictions, duplicates) — default keep, removal
+    only on explicit per-rule approval.
+  Manual and occasional by design; not automated via a hook.
+
 ## [1.2.0] — 2026-05-30
 
 ### Added
