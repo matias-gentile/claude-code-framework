@@ -4,6 +4,19 @@ All notable changes to the Agent-First Engineering Framework are documented here
 The format is based on [Keep a Changelog](https://keepachangelog.com), and this
 project adheres to [Semantic Versioning](https://semver.org).
 
+## [1.5.0] — 2026-05-30
+
+### Added
+- **Handoff skill + `handoff` command** for resuming work cleanly when context fills up
+  or you pause. Generates a structured handoff (next concrete step first, then current
+  state, branch, test status, files touched, decisions, and gotchas) into the
+  `## Handoff Notes` section of session-notes — which the SessionStart hook already
+  surfaces next session. Works for "future you" and for handing the project to a teammate.
+
+### Changed
+- The PreCompact hook now points at the handoff format, so automatic compaction and the
+  manual `handoff` command produce the same resume-ready document.
+
 ## [1.4.0] — 2026-05-30
 
 ### Added

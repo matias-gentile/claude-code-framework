@@ -22,6 +22,7 @@
 - After every non-trivial task: ask "should this go in CLAUDE.md, a skill, or an ADR?"
 - If a bug or architectural choice surprised you: record it before closing the session
 - Run `/project:session-review` at end of session — it drafts rules, ADRs, and skills for approval
+- Run the `handoff` command before `/clear` or pausing — it writes a resume-ready handoff that next session loads automatically
 - Use `/compact` to summarize context before `/clear`
 
 ## Agent Workforce

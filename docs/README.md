@@ -7,7 +7,7 @@ A plug-and-play framework that gives Claude Code a six-layer engineering harness
 | Layer | Files | Purpose |
 |---|---|---|
 | **Constitution** | `CLAUDE.md` / `AGENTS.md` | Hard rules, escape hatches, 4-phase flow |
-| **Domain knowledge** | `.claude/skills/` (9 skills) | API conventions, TDD, verification, runbook, session notes, ADRs, curation |
+| **Domain knowledge** | `.claude/skills/` (10 skills) | API conventions, TDD, verification, runbook, session notes, ADRs, curation |
 | **Agent workforce** | `.claude/agents/` (4 agents) | planner, tdd-writer, code-reviewer, quality-gate |
 | **Quality gates** | `.claude/hooks/` (3 hooks) | Auto-runs tests, blocks bad commits, prompts compounding loop |
 | **External tools** | `.mcp.json` | GitHub, Context7, database, custom APIs |
@@ -115,7 +115,8 @@ your-project/                              ← your project, untouched
     │   ├── session-notes/ SKILL.md        ← Structured record-keeping
     │   ├── adr-recorder/  SKILL.md        ← Captures architectural decisions
     │   ├── api-conventions/ SKILL.md      ← REST design rules
-    │   └── curator/       SKILL.md        ← Consolidates notes, prunes stale ADRs/rules
+    │   ├── curator/       SKILL.md        ← Consolidates notes, prunes stale ADRs/rules
+    │   └── handoff/       SKILL.md        ← Resume-ready handoff when context fills up
     ├── hooks/
     │   ├── post-edit-test.sh              ← Runs tests after every file write
     │   ├── pre-commit-check.sh            ← Blocks commits if tests haven't passed

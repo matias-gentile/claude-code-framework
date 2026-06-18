@@ -168,8 +168,8 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <p class="hero-sub">A framework that turns Claude Code from a suggestion tool into a structured engineering team — with specialists, quality gates, and a memory that compounds every session.</p>
   <div class="stats">
     <div><div class="stat-n">4</div><div class="stat-l">Specialist agents</div></div>
-    <div><div class="stat-n">9</div><div class="stat-l">Knowledge skills</div></div>
-    <div><div class="stat-n">8</div><div class="stat-l">Slash commands</div></div>
+    <div><div class="stat-n">10</div><div class="stat-l">Knowledge skills</div></div>
+    <div><div class="stat-n">9</div><div class="stat-l">Slash commands</div></div>
     <div><div class="stat-n">6</div><div class="stat-l">Lifecycle hooks</div></div>
   </div>
 </header>
@@ -235,7 +235,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   </div>
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">2</div><div class="lname">Skills — on-demand knowledge</div><div class="ltag">8 skills · loads when relevant</div><i class="ti ti-chevron-down chevron"></i></div>
-    <div class="lbody">Knowledge modules that load only when the topic is relevant — saving memory for actual work. <ul><li><strong>setup</strong> — scans codebase, fills placeholders, enriches CLAUDE.md</li><li><strong>verification</strong> — confirms features work from the user's perspective</li><li><strong>tdd-practices</strong> — test-first enforcement</li><li><strong>runbook</strong> — structured debugging protocol</li><li><strong>session-notes</strong> — writes notes so summaries come from records, not memory</li><li><strong>adr-recorder</strong> — captures architectural decisions permanently</li><li><strong>api-conventions</strong> — REST design rules</li><li><strong>curator</strong> — consolidates notes, marks superseded ADRs, prunes stale rules as the project ages</li></ul></div>
+    <div class="lbody">Knowledge modules that load only when the topic is relevant — saving memory for actual work. <ul><li><strong>setup</strong> — scans codebase, fills placeholders, enriches CLAUDE.md</li><li><strong>verification</strong> — confirms features work from the user's perspective</li><li><strong>tdd-practices</strong> — test-first enforcement</li><li><strong>runbook</strong> — structured debugging protocol</li><li><strong>session-notes</strong> — writes notes so summaries come from records, not memory</li><li><strong>adr-recorder</strong> — captures architectural decisions permanently</li><li><strong>api-conventions</strong> — REST design rules</li><li><strong>curator</strong> — consolidates notes, marks superseded ADRs, prunes stale rules as the project ages</li><li><strong>handoff</strong> — writes a resume-ready handoff so the next session picks up exactly where you left off</li></ul></div>
   </div>
   <div class="layer" onclick="tgl(this)">
     <div class="lhead"><div class="lnum">3</div><div class="lname">Agents — specialist workers</div><div class="ltag">4 agents · isolated execution</div><i class="ti ti-chevron-down chevron"></i></div>
@@ -305,6 +305,7 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
     <div class="cmdrow"><div class="cmdname">session-review</div><div class="cmddesc">Draft lessons from this session — rules, ADRs, skills — for your approval. Run before <code>/clear</code>. This is what makes the framework compound.</div></div>
     <div class="cmdrow"><div class="cmdname">update</div><div class="cmddesc">Pull the latest framework improvements into this project. Updates components you haven't touched, preserves your customizations, and never alters your CLAUDE.md.</div></div>
     <div class="cmdrow"><div class="cmdname">curate</div><div class="cmddesc">Keep accumulated memory compact as the project ages: compresses old session notes, marks superseded ADRs, and proposes removal of stale CLAUDE.md rules — each with your approval.</div></div>
+    <div class="cmdrow"><div class="cmdname">handoff</div><div class="cmddesc">Generate a resume-ready handoff before context fills up or you pause — next step, current state, files touched, decisions, and gotchas. The next session loads it automatically.</div></div>
   </div>
 </section>
 
@@ -352,7 +353,9 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <div class="card"><div class="card-t">Decisions → Architecture Decision Records</div><div class="card-b">If an architectural decision was made, a full ADR is drafted — context, decision, alternatives considered, consequences. Agents read it before touching that area in future sessions.<br><br><em>Example: ADR-0003 "Cursor-based pagination — rejected offset for performance"</em></div></div>
   <div class="card"><div class="card-t">Workflows → New skills</div><div class="card-b">If a workflow took many turns to get right, a new skill is drafted — name, description, content preview — for your approval. That workflow becomes a one-turn interaction next time.<br><br><em>Example: A deployment verification checklist that took 8 turns to establish</em></div></div>
   <div class="card"><div class="card-t">Recurring roles → Custom agents</div><div class="card-b">If a session surfaced a distinct repeating role — database migrations, API client generation, localization — session-review proposes a new specialist agent with its own restricted tools and contracts, for your approval. The framework grows its own workforce based on your actual project.<br><br><em>Example: A db-migrator agent proposed after three sessions of migration work</em></div></div>
-  <div class="callout"><div class="callout-t">The honest number</div><div class="callout-b">Teams using the compounding loop consistently report going from 1.5× productivity on day one to 5–10× by month two. Teams that skip it stay at 1.5× — because every session starts from the same baseline.</div></div>
+  <div class="card"><div class="card-t">Context fills up → handoff → next session resumes</div><div class="card-b">When you're about to hit the context limit or pause work, the <code>handoff</code> command writes a resume-ready document — the next concrete step, current state, files touched, decisions, and gotchas — into your session notes. Next session, the SessionStart hook surfaces it automatically, so you (or a teammate) pick up exactly where you left off instead of re-deriving everything. Automatic compaction triggers the same handoff format, so nothing is lost even when you don't run it manually.<br><br><em>This is what makes long-running work survive the context window.</em></div></div>
+
+    <div class="callout"><div class="callout-t">The honest number</div><div class="callout-b">Teams using the compounding loop consistently report going from 1.5× productivity on day one to 5–10× by month two. Teams that skip it stay at 1.5× — because every session starts from the same baseline.</div></div>
 </section>
 
 <!-- SAFETY -->
