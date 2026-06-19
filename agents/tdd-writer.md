@@ -2,6 +2,7 @@
 name: tdd-writer
 description: Writes failing tests BEFORE any implementation code is written. Dispatch this agent first on any feature or bug fix. It reads the plan and produces test files that define the expected behaviour — then stops. The implementation agent runs after.
 tools: Read, Glob, Grep, Write
+disallowed-tools: Edit, MultiEdit, Bash
 model: claude-sonnet-4-20250514
 isolation: worktree
 ---

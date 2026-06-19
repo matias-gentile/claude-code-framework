@@ -2,6 +2,7 @@
 name: quality-gate
 description: Evaluates whether a task is genuinely complete before marking it done. Dispatch AFTER implementation and BEFORE closing the task. Acts as an independent second opinion — checks tests pass, verification flows succeed, no loose ends remain, and session notes are up to date. Returns a structured pass/fail verdict.
 tools: Read, Glob, Grep, Bash
+disallowed-tools: Write, Edit, MultiEdit
 model: claude-sonnet-4-20250514
 isolation: worktree
 ---

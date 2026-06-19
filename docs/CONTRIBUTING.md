@@ -234,3 +234,21 @@ git commit -m "feat: add runbook skill"
 ```
 
 This makes the git log a readable history of what the team learned.
+
+---
+
+## Troubleshooting: is it the framework?
+
+If Claude Code is misbehaving and you suspect the framework (a hook erroring, a skill
+loading wrong, a permission rule blocking something), isolate it with safe mode:
+
+```bash
+claude --safe-mode          # or set CLAUDE_CODE_SAFE_MODE=1
+```
+
+Safe mode starts Claude Code with all customizations disabled — CLAUDE.md, skills,
+plugins, hooks, MCP servers, and custom commands and agents do not load (authentication,
+model selection, built-in tools, and permissions still work). If the problem disappears
+in safe mode, it's coming from the framework (or another customization); if it persists,
+it's Claude Code itself. This is the fastest way to tell whether a bug is yours to fix
+here or belongs upstream.

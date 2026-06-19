@@ -2,6 +2,7 @@
 name: code-reviewer
 description: Reviews code changes for quality, architectural alignment, security, and best practices. Dispatch BEFORE any merge or PR. Returns a structured verdict — Approved, Approved with notes, or Blocked.
 tools: Read, Glob, Grep
+disallowed-tools: Write, Edit, MultiEdit, Bash
 model: claude-sonnet-4-20250514
 isolation: worktree
 ---

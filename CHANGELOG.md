@@ -4,6 +4,20 @@ All notable changes to the Agent-First Engineering Framework are documented here
 The format is based on [Keep a Changelog](https://keepachangelog.com), and this
 project adheres to [Semantic Versioning](https://semver.org).
 
+## [1.5.1] — 2026-05-30
+
+### Changed
+- **Agent least-privilege hardening.** All four agents now declare `disallowed-tools` in
+  frontmatter (Claude Code v2.1.152+) as defense-in-depth on top of their `tools` allow
+  list: planner and code-reviewer block Write/Edit/MultiEdit/Bash (read-only), quality-gate
+  blocks Write/Edit/MultiEdit (keeps Bash for tests), tdd-writer blocks Edit/MultiEdit/Bash
+  (keeps Write for test files only). Even if a permission rule is later loosened, these
+  agents cannot mutate code they shouldn't.
+
+### Added
+- CONTRIBUTING troubleshooting section: use `--safe-mode` / `CLAUDE_CODE_SAFE_MODE` to
+  isolate whether a problem is coming from the framework or from Claude Code itself.
+
 ## [1.5.0] — 2026-05-30
 
 ### Added

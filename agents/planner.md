@@ -2,6 +2,7 @@
 name: planner
 description: Read-only exploration agent. Dispatch BEFORE any multi-file task. Produces a numbered plan for human review — does NOT write code or edit files. Use this as Phase 1 (Explore) and Phase 2 (Plan) of the 4-phase flow.
 tools: Read, Glob, Grep, LS
+disallowed-tools: Write, Edit, MultiEdit, Bash
 model: claude-sonnet-4-20250514
 isolation: worktree
 ---
