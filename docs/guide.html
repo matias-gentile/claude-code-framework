@@ -122,13 +122,6 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
 .fwho{display:inline-block;font-size:11px;margin-top:6px;padding:2px 9px;border-radius:20px;font-weight:500}
 
 /* Loop */
-.loop{display:flex;background:var(--rule);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem}
-.lc{flex:1;padding:1.25rem 1rem;background:var(--paper-2);text-align:center}
-.la{display:flex;align-items:center;justify-content:center;background:var(--paper-2);padding:0 .25rem;color:var(--ink-3);font-size:18px}
-.lci{font-size:22px;margin-bottom:.5rem}
-.lcl{font-size:13px;font-weight:500;margin-bottom:.25rem}
-.lcs{font-size:12px;color:var(--ink-3);line-height:1.4}
-@media(max-width:560px){.loop{flex-direction:column}.la{padding:.25rem 0;transform:rotate(90deg)}}
 
 /* Cards */
 .card{background:var(--paper-2);border-radius:var(--r);border:.5px solid var(--rule);padding:1.25rem 1.5rem;margin-bottom:8px}
@@ -157,6 +150,22 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
 /* Footer */
 .footer{text-align:center;padding:3rem 0 1rem;font-size:12px;color:var(--ink-3);border-top:.5px solid var(--rule);margin-top:2rem;line-height:2}
 .footer a{color:var(--ink-2);text-decoration:none}
+
+/* Animated compounding loop */
+.cloop-wrap{display:flex;justify-content:center;margin:1.5rem 0 2rem}
+.cloop{width:100%;max-width:440px;height:auto}
+.cloop .track{fill:none;stroke:var(--rule-s);stroke-width:2}
+.cloop .flow{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:40 380;animation:cloopflow 6s linear infinite}
+@keyframes cloopflow{to{stroke-dashoffset:-420}}
+.cloop .node{fill:var(--paper-2);stroke:var(--rule-s);stroke-width:1.5}
+.cloop .node-on{animation:clooppulse 6s ease-in-out infinite}
+.cloop .n1{animation-delay:0s}.cloop .n2{animation-delay:1.5s}.cloop .n3{animation-delay:3s}.cloop .n4{animation-delay:4.5s}
+@keyframes clooppulse{0%,80%,100%{fill:var(--paper-2);stroke:var(--rule-s)}10%,30%{fill:var(--accent-bg);stroke:var(--accent)}}
+.cloop .ic{font-size:19px;text-anchor:middle;dominant-baseline:central}
+.cloop .lbl{font-family:'DM Mono',monospace;font-size:8.5px;fill:var(--ink-2);text-anchor:middle;letter-spacing:.02em}
+.cloop .ctr-t{font-family:Fraunces,serif;font-size:13px;fill:var(--ink);text-anchor:middle;font-style:italic}
+.cloop .ctr-s{font-family:'DM Mono',monospace;font-size:7.5px;fill:var(--ink-3);text-anchor:middle;letter-spacing:.08em;text-transform:uppercase}
+@media(prefers-reduced-motion:reduce){.cloop .flow,.cloop .node-on{animation:none}.cloop .flow{stroke-dasharray:none;opacity:.5}}
 </style>
 </head>
 <body>
@@ -339,14 +348,43 @@ h2.serif{font-size:22px;margin-bottom:.9rem;line-height:1.3}
   <div class="label">The compounding loop</div>
   <h2 class="serif">Every session makes the next one faster.</h2>
   <p class="body">Most teams use AI tools the same way forever. This framework is designed to compound — each session produces permanent improvements. The Stop hook prompts <code>session-review</code> automatically when Claude finishes a task.</p>
-  <div class="loop">
-    <div class="lc"><div class="lci">⚙️</div><div class="lcl">Task completes</div><div class="lcs">Feature ships, bug fixed, decision made</div></div>
-    <div class="la">→</div>
-    <div class="lc"><div class="lci">🔍</div><div class="lcl">session-review</div><div class="lcs">Analyzes what happened, identifies candidates</div></div>
-    <div class="la">→</div>
-    <div class="lc"><div class="lci">📝</div><div class="lcl">Drafts artifacts</div><div class="lcs">Writes rule, ADR, or skill — you approve</div></div>
-    <div class="la">→</div>
-    <div class="lc"><div class="lci">📈</div><div class="lcl">Framework improves</div><div class="lcs">Next session starts smarter</div></div>
+  <div class="cloop-wrap">
+    <svg class="cloop" viewBox="0 0 440 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The compounding loop: task completes, session-review runs, artifacts are drafted, the framework improves, and the cycle repeats.">
+      <!-- circular track through the four node centers (top, right, bottom, left) -->
+      <circle class="track" cx="220" cy="150" r="105"/>
+      <!-- animated flow pulse traveling the circle -->
+      <circle class="flow" cx="220" cy="150" r="105"/>
+
+      <!-- center label -->
+      <text class="ctr-s" x="220" y="138">compounds every</text>
+      <text class="ctr-t" x="220" y="158">session</text>
+      <text class="ctr-s" x="220" y="174">→ 5–10× by month two</text>
+
+      <!-- Node 1 — top — Task completes -->
+      <g>
+        <circle class="node node-on n1" cx="220" cy="45" r="30"/>
+        <text class="ic" x="220" y="43">⚙️</text>
+        <text class="lbl" x="220" y="90">task completes</text>
+      </g>
+      <!-- Node 2 — right — session-review -->
+      <g>
+        <circle class="node node-on n2" cx="325" cy="150" r="30"/>
+        <text class="ic" x="325" y="148">🔍</text>
+        <text class="lbl" x="325" y="195">session-review</text>
+      </g>
+      <!-- Node 3 — bottom — Drafts artifacts -->
+      <g>
+        <circle class="node node-on n3" cx="220" cy="255" r="30"/>
+        <text class="ic" x="220" y="253">📝</text>
+        <text class="lbl" x="220" y="300">drafts rule / ADR / skill</text>
+      </g>
+      <!-- Node 4 — left — Framework improves -->
+      <g>
+        <circle class="node node-on n4" cx="115" cy="150" r="30"/>
+        <text class="ic" x="115" y="148">📈</text>
+        <text class="lbl" x="115" y="195">starts smarter</text>
+      </g>
+    </svg>
   </div>
   <div class="label">What gets captured and how</div>
   <div class="card"><div class="card-t">Rules → CLAUDE.md</div><div class="card-b">If Claude got something wrong and had to be corrected, <code>session-review</code> drafts the exact rule text with rationale and budget impact. You approve it. Next session, Claude follows it automatically.<br><br><em>Example: "Never import axios directly — use httpClient from src/lib/http.ts"</em></div></div>
